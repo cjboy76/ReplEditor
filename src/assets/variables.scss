@@ -1,0 +1,15 @@
+:root {
+  --bg-default: rgb(0, 0, 0);
+  --text-default: rgb(239, 239, 239);
+  --text-highlight: rgb(255, 187, 69);
+  --text-dark: rgb(100, 100, 100);
+  --border-default: rgb(178, 176, 176);
+}
+
+[data-theme="light"] {
+  --bg-default: rgb(255, 255, 255);
+  --text-default: rgb(80, 80, 78);
+  --text-highlight: rgb(36, 111, 112);
+  --text-dark: rgb(100, 100, 100);
+  --border-default: rgb(178, 176, 176);
+}
