@@ -4,6 +4,7 @@ import Fa6SolidMoon from '~icons/fa6-solid/moon';
 import Fa6SolidSun from '~icons/fa6-solid/sun';
 import GithubIcon from '@/components/GithubIcon.vue';
 import { currentRuntimeVersion } from '@/store/useFileStore';
+import { repository } from '../../package.json';
 
 const { isDarkMode, toggleTheme } = inject('themeMode');
 </script>
@@ -25,7 +26,7 @@ const { isDarkMode, toggleTheme } = inject('themeMode');
           />
         </button>
         <span>Version @{{ currentRuntimeVersion }}</span>
-        <a href="https://github.com/cjboy76/MarioEditor" target="_blank">
+        <a :href="repository.url" target="_blank">
           <GithubIcon :isDarkMode="isDarkMode" />
         </a>
       </div>

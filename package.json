@@ -7,6 +7,10 @@
     "email": "alan200076@gmail.com",
     "url": "https://github.com/cjboy76"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cjboy76/ReplEditor"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",

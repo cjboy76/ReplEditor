@@ -6,7 +6,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/',
+  base: '/ReplEditor/',
   plugins: [
     vue(),
 
@@ -17,7 +17,7 @@ export default defineConfig({
     }),
 
     VitePWA({
-      injectRegister: 'script',
+      injectRegister: 'auto',
       registerType: 'autoUpdate',
       includeAssets: ['favicon.png'],
       workbox: {
@@ -34,10 +34,10 @@ export default defineConfig({
         name: 'ReplEditor',
         short_name: 'ReplEditor',
         description: 'My Cute ReplEditor',
-        theme_color: '#ffffff',
+        theme_color: '#111',
         display: 'standalone',
-        start_url: '/',
-        scope: '/',
+        start_url: '/ReplEditor/',
+        scope: '/ReplEditor/',
         icons: [
           {
             src: '/icon-192x192.png',
