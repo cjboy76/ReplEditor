@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/ReplEditor/dev-sw.js?dev-sw', { scope: '/', type: 'classic' })

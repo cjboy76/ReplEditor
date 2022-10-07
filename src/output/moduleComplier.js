@@ -6,8 +6,8 @@ import {
   extractIdentifiers,
   isInDestructureAssignment,
   isStaticProperty,
-} from "vue/compiler-sfc";
-import { defaultMainFile } from "../store/useFileStore";
+} from '@vue/compiler-sfc';
+import { defaultMainFile } from '../store/useFileStore';
 
 const modulesKey = `__modules__`;
 const exportKey = `__export__`;
@@ -18,7 +18,7 @@ function processModule(store, src, filename) {
   const s = new MagicString(src);
   const ast = babelParse(src, {
     sourceFilename: filename,
-    sourceType: "module",
+    sourceType: 'module',
   }).program.body;
 
   const idToImportMap = new Map();
@@ -27,7 +27,7 @@ function processModule(store, src, filename) {
   const importToIdMap = new Map();
 
   function defineImport(node, source) {
-    const filename = source.replace(/^\.\/+/, "");
+    const filename = source.replace(/^\.\/+/, '');
     if (!(filename in store.$state.files)) {
       throw new Error(`File "${filename}" does not exist.`);
     }
@@ -60,17 +60,17 @@ function processModule(store, src, filename) {
     // import foo from 'foo' --> foo -> __import_foo__.default
     // import { baz } from 'foo' --> baz -> __import_foo__.baz
     // import * as ok from 'foo' --> ok -> __import_foo__
-    if (node.type === "ImportDeclaration") {
+    if (node.type === 'ImportDeclaration') {
       const source = node.source.value;
-      if (source.startsWith("./")) {
+      if (source.startsWith('./')) {
         const importId = defineImport(node, node.source.value);
         for (const spec of node.specifiers) {
-          if (spec.type === "ImportSpecifier") {
+          if (spec.type === 'ImportSpecifier') {
             idToImportMap.set(
               spec.local.name,
               `${importId}.${spec.imported.name}`
             );
-          } else if (spec.type === "ImportDefaultSpecifier") {
+          } else if (spec.type === 'ImportDefaultSpecifier') {
             idToImportMap.set(spec.local.name, `${importId}.default`);
           } else {
             // namespace specifier
@@ -85,15 +85,15 @@ function processModule(store, src, filename) {
   // 2. check all export statements and define exports
   for (const node of ast) {
     // named exports
-    if (node.type === "ExportNamedDeclaration") {
+    if (node.type === 'ExportNamedDeclaration') {
       if (node.declaration) {
         if (
-          node.declaration.type === "FunctionDeclaration" ||
-          node.declaration.type === "ClassDeclaration"
+          node.declaration.type === 'FunctionDeclaration' ||
+          node.declaration.type === 'ClassDeclaration'
         ) {
           // export function foo() {}
           defineExport(node.declaration.id.name);
-        } else if (node.declaration.type === "VariableDeclaration") {
+        } else if (node.declaration.type === 'VariableDeclaration') {
           // export const foo = 1, bar = 2
           for (const decl of node.declaration.declarations) {
             for (const id of extractIdentifiers(decl.id)) {
@@ -121,8 +121,8 @@ function processModule(store, src, filename) {
     }
 
     // default export
-    if (node.type === "ExportDefaultDeclaration") {
-      if ("id" in node.declaration && node.declaration.id) {
+    if (node.type === 'ExportDefaultDeclaration') {
+      if ('id' in node.declaration && node.declaration.id) {
         // named hoistable/class exports
         // export default function foo() {}
         // export default class A {}
@@ -136,7 +136,7 @@ function processModule(store, src, filename) {
     }
 
     // export * from './foo'
-    if (node.type === "ExportAllDeclaration") {
+    if (node.type === 'ExportAllDeclaration') {
       const importId = defineImport(node, node.source.value);
       s.remove(node.start, node.end);
       s.append(`\nfor (const key in ${importId}) {
@@ -149,7 +149,7 @@ function processModule(store, src, filename) {
 
   // 3. convert references to import bindings
   for (const node of ast) {
-    if (node.type === "ImportDeclaration") continue;
+    if (node.type === 'ImportDeclaration') continue;
     walkIdentifiers(node, (id, parent, parentStack) => {
       const binding = idToImportMap.get(id.name);
       if (!binding) {
@@ -166,7 +166,7 @@ function processModule(store, src, filename) {
           s.appendLeft(id.end, `: ${binding}`);
         }
       } else if (
-        parent.type === "ClassDeclaration" &&
+        parent.type === 'ClassDeclaration' &&
         id === parent.superClass
       ) {
         if (!declaredConst.has(id.name)) {
@@ -184,14 +184,14 @@ function processModule(store, src, filename) {
   // 4. convert dynamic imports
   walk(ast, {
     enter(node, parent) {
-      if (node.type === "Import" && parent.type === "CallExpression") {
+      if (node.type === 'Import' && parent.type === 'CallExpression') {
         const arg = parent.arguments[0];
-        if (arg.type === "StringLiteral" && arg.value.startsWith("./")) {
+        if (arg.type === 'StringLiteral' && arg.value.startsWith('./')) {
           s.overwrite(node.start, node.start + 6, dynamicImportKey);
           s.overwrite(
             arg.start,
             arg.end,
-            JSON.stringify(arg.value.replace(/^\.\/+/, ""))
+            JSON.stringify(arg.value.replace(/^\.\/+/, ''))
           );
         }
       }
@@ -236,7 +236,7 @@ export function compileModulesForPreview(store) {
 
   // also add css files that are not imported
   for (const filename in store.files) {
-    if (filename.endsWith(".css")) {
+    if (filename.endsWith('.css')) {
       const file = store.files[filename];
       if (!seen.has(file)) {
         processed.push(
