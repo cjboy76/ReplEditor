@@ -6,7 +6,7 @@ import {
   extractIdentifiers,
   isInDestructureAssignment,
   isStaticProperty,
-} from '@vue/compiler-sfc';
+} from 'vue/compiler-sfc';
 import { defaultMainFile } from '../store/useFileStore';
 
 const modulesKey = `__modules__`;
