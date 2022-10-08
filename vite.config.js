@@ -17,14 +17,11 @@ export default defineConfig({
     }),
 
     VitePWA({
-      injectRegister: 'auto',
       registerType: 'autoUpdate',
       includeAssets: ['favicon.png'],
       workbox: {
         cleanupOutdatedCaches: true,
         globPatterns: ['**/*.{js,css,html,png}'],
-        clientsClaim: true,
-        skipWaiting: true,
       },
       devOptions: {
         enabled: true,
