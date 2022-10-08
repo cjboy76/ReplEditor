@@ -23,9 +23,6 @@ export default defineConfig({
         cleanupOutdatedCaches: true,
         globPatterns: ['**/*.{js,css,html,png}'],
       },
-      devOptions: {
-        enabled: true,
-      },
       manifest: {
         id: 'ReplEditor',
         name: 'ReplEditor',

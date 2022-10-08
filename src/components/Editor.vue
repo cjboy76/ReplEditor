@@ -40,7 +40,7 @@ onMounted(() => {
       }
       FILE_STORE.updateFile(monacoEditor.getValue(), activeFile.value);
       transformSFC(FILE_STORE, FILE_STORE.files[activeFile.value]);
-    }, 1000)
+    })
   );
   appendListener(window, 'resize', editorResize);
 });

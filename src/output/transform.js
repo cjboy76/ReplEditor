@@ -1,5 +1,5 @@
 import hashId from 'hash-sum';
-import * as defaultCompiler from '@vue/compiler-sfc';
+import * as defaultCompiler from 'vue/compiler-sfc';
 
 const { shouldTransformRef, transformRef } = defaultCompiler;
 const COMP_IDENTIFIER = `__sfc__`;
