@@ -1,5 +1,5 @@
-import hashId from "hash-sum";
-import * as defaultCompiler from "vue/compiler-sfc";
+import hashId from 'hash-sum';
+import * as defaultCompiler from 'vue/compiler-sfc';
 
 const { shouldTransformRef, transformRef } = defaultCompiler;
 const COMP_IDENTIFIER = `__sfc__`;
@@ -7,7 +7,7 @@ const COMP_IDENTIFIER = `__sfc__`;
 export const transformSFC = async (store, { code, fileName }) => {
   if (!code.trim()) return;
 
-  if (fileName.endsWith(".js")) {
+  if (fileName.endsWith('.js')) {
     if (shouldTransformRef(code)) {
       code = transformRef(code, { fileName }).code;
     }
@@ -15,7 +15,7 @@ export const transformSFC = async (store, { code, fileName }) => {
     return;
   }
 
-  let clientCode = "";
+  let clientCode = '';
 
   const { descriptor } = defaultCompiler.parse(code, {
     filename: fileName,
@@ -55,7 +55,7 @@ export const transformSFC = async (store, { code, fileName }) => {
   }
 
   // style
-  let css = "";
+  let css = '';
   for (const style of descriptor.styles) {
     const styleResult = defaultCompiler.compileStyle({
       source: style.content,
@@ -64,7 +64,7 @@ export const transformSFC = async (store, { code, fileName }) => {
       scoped: style.scoped,
       modules: !!style.module,
     });
-    css += styleResult.code + "\n";
+    css += styleResult.code + '\n';
   }
   if (clientCode) {
     clientCode +=
@@ -120,7 +120,7 @@ async function doCompileScript(descriptor, id) {
       },
     });
 
-    let outputCode = "";
+    let outputCode = '';
     outputCode +=
       `\n` +
       defaultCompiler.rewriteDefault(compiledScript.content, COMP_IDENTIFIER);

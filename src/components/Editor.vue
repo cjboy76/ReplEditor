@@ -4,15 +4,15 @@ import {
   monacoEditor,
   Monaco,
   editorResize,
-} from "../utils/monaco";
-import { onUnmounted, onMounted, watch, inject } from "vue";
-import { useFileStore, useImportMap } from "@/store/useFileStore";
-import { debounce, appendListener, removeListener } from "@/utils/utility";
-import { transformSFC } from "@/output/transform";
-import FileSystem from "@/components/FileSystem.vue";
+} from '../utils/monaco';
+import { onUnmounted, onMounted, watch, inject } from 'vue';
+import { useFileStore, useImportMap } from '@/store/useFileStore';
+import { debounce, appendListener, removeListener } from '@/utils/utility';
+import { transformSFC } from '@/output/transform';
+import FileSystem from '@/components/FileSystem.vue';
 
-const { activeFile } = inject("activeFile");
-const { isDarkMode } = inject("themeMode");
+const { activeFile } = inject('activeFile');
+const { isDarkMode } = inject('themeMode');
 const FILE_STORE = useFileStore();
 const IMPORT_MAP = useImportMap();
 
@@ -22,9 +22,9 @@ watch(activeFile, (newValue) => {
 
 watch(isDarkMode, (newValue) => {
   if (!newValue) {
-    setEditorTheme("vs");
+    setEditorTheme('vitesse-light');
   } else {
-    setEditorTheme("vs-dark");
+    setEditorTheme('vitesse-dark');
   }
 });
 
@@ -34,23 +34,23 @@ onMounted(() => {
 
   monacoEditor.getModel().onDidChangeContent(
     debounce(() => {
-      if (activeFile.value === "ImportMap") {
+      if (activeFile.value === 'ImportMap') {
         IMPORT_MAP.updateImportMap(monacoEditor.getValue());
         return;
       }
       FILE_STORE.updateFile(monacoEditor.getValue(), activeFile.value);
       transformSFC(FILE_STORE, FILE_STORE.files[activeFile.value]);
-    }, 1000)
+    })
   );
-  appendListener(window, "resize", editorResize);
+  appendListener(window, 'resize', editorResize);
 });
 onUnmounted(() => {
-  removeListener(window, "resize", editorResize);
+  removeListener(window, 'resize', editorResize);
 });
 
 function setEditorContent(fileName) {
-  if (fileName === "ImportMap") {
-    Monaco.editor.setModelLanguage(monacoEditor.getModel(), "json");
+  if (fileName === 'ImportMap') {
+    Monaco.editor.setModelLanguage(monacoEditor.getModel(), 'json');
     monacoEditor.getModel().setValue(IMPORT_MAP.$state.importMap);
     return;
   }
@@ -63,11 +63,11 @@ function setEditorContent(fileName) {
 }
 
 function getFileType(fileName) {
-  return fileName.endsWith("js")
-    ? "javascript"
-    : fileName.endsWith("vue")
-    ? "html"
-    : "css";
+  return fileName.endsWith('js')
+    ? 'javascript'
+    : fileName.endsWith('vue')
+    ? 'html'
+    : 'css';
 }
 
 function setEditorTheme(theme) {
