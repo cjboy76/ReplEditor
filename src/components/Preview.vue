@@ -1,19 +1,19 @@
 <script setup>
-import { onUnmounted, onMounted, ref, watchEffect } from "vue";
+import { onUnmounted, onMounted, ref, watchEffect } from 'vue';
 import {
   useFileStore,
   defaultMainFile,
   useImportMap,
-} from "../store/useFileStore";
-import srcdoc from "../output/playground.html?raw";
-import { compileModulesForPreview } from "../output/moduleComplier";
-import { appendListener, removeListener } from "../utils/utility";
-import Message from "@/components/Message.vue";
+} from '../store/useFileStore';
+import srcdoc from '../output/playground.html?raw';
+import { compileModulesForPreview } from '../output/moduleComplier';
+import { appendListener, removeListener } from '../utils/utility';
+import Message from '@/components/Message.vue';
 
 const preview = ref();
 const FILE_STORE = useFileStore();
 const IMPORT_MAP = useImportMap();
-const error = ref("");
+const error = ref('');
 let sandBox;
 let stopViewWatcher;
 
@@ -23,15 +23,15 @@ IMPORT_MAP.$subscribe(() => {
 
 onMounted(() => {
   createSandBox();
-  appendListener(window, "message", handleSandboxEvent);
+  appendListener(window, 'message', handleSandboxEvent);
 });
 
 onUnmounted(() => {
-  removeListener(sandBox, "load", () => {
+  removeListener(sandBox, 'load', () => {
     watchEffect(updateView);
   });
   stopViewWatcher && stopViewWatcher();
-  removeListener(window, "message", handleSandboxEvent);
+  removeListener(window, 'message', handleSandboxEvent);
 });
 
 function createSandBox() {
@@ -40,18 +40,18 @@ function createSandBox() {
     preview.value.removeChild(sandBox);
   }
 
-  sandBox = document.createElement("iframe");
+  sandBox = document.createElement('iframe');
   sandBox.setAttribute(
-    "sandbox",
+    'sandbox',
     [
-      "allow-forms",
-      "allow-modals",
-      "allow-pointer-lock",
-      "allow-popups",
-      "allow-same-origin",
-      "allow-scripts",
-      "allow-top-navigation-by-user-activation",
-    ].join(" ")
+      'allow-forms',
+      'allow-modals',
+      'allow-pointer-lock',
+      'allow-popups',
+      'allow-same-origin',
+      'allow-scripts',
+      'allow-top-navigation-by-user-activation',
+    ].join(' ')
   );
 
   const sandBoxSrc = srcdoc.replace(
@@ -60,8 +60,8 @@ function createSandBox() {
   );
   sandBox.srcdoc = sandBoxSrc;
   preview.value.appendChild(sandBox);
-  appendListener(sandBox, "load", () => {
-    stopViewWatcher = watchEffect(updateView);
+  appendListener(sandBox, 'load', () => {
+    // stopViewWatcher = watchEffect(updateView);
   });
 }
 
@@ -90,16 +90,16 @@ function updateView() {
 
   sandBox.contentWindow.postMessage(
     {
-      action: "eval",
+      action: 'eval',
       code: codeToEval,
     },
-    "*"
+    '*'
   );
 }
 
 function handleSandboxEvent(event) {
   const { action, value } = event.data;
-  if (action === "error") {
+  if (action === 'error') {
     error.value = value;
   }
 }
@@ -115,7 +115,7 @@ function handleSandboxEvent(event) {
 
 <style lang="scss" scoped>
 .preview {
-  height: 100%;
+  height: 100vh;
   :deep(iframe) {
     width: 100%;
     height: 100%;

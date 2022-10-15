@@ -12,7 +12,7 @@ const { isDarkMode, toggleTheme } = inject('themeMode');
 <template>
   <header>
     <div class="header">
-      <h1 class="headerText">Vue Playground</h1>
+      <h1 class="headerText">ReplEditor</h1>
       <div class="options">
         <button
           class="toggleTheme"

@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "author": {
-    "name": "Yung Tse, Teng",
+    "name": "YungTse, Teng",
     "email": "alan200076@gmail.com",
     "url": "https://github.com/cjboy76"
   },
@@ -21,7 +21,7 @@
     "hash-sum": "^2.0.0",
     "monaco-editor": "^0.33.0",
     "pinia": "^2.0.14",
-    "split.js": "^1.6.5",
+    "splitpanes": "^3.1.1",
     "theme-vitesse": "^0.5.2",
     "vue": "^3.2.25"
   },
