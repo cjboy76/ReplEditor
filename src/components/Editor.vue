@@ -1,11 +1,8 @@
 <script setup>
 import HtmlEditor from '@/components/editors/htmlEditor.vue';
-// import CssEditor from '@/components/editors/cssEditor.vue';
-// import JsEditor from '@/components/editors/jsEditor.vue';
-// import { useMonaco, resizeListener } from '@/utils/useMonaco';
-import { onUnmounted, onMounted, watch, inject, ref } from 'vue';
-import { useMonaco } from '@/utils/useMonaco';
-import { resizeListener } from '@/utils/utility';
+import CssEditor from '@/components/editors/cssEditor.vue';
+import JsEditor from '@/components/editors/jsEditor.vue';
+import { onUnmounted, onMounted, watch, inject } from 'vue';
 
 // import { useFileStore, useImportMap } from '@/store/useFileStore';
 // import { debounce, appendListener, removeListener } from '@/utils/utility';
@@ -32,20 +29,15 @@ watch(isDarkMode, (newValue) => {
     setEditorTheme('vitesse-dark');
   }
 });
-let htmlElement;
-let cssElement;
-let jsElement;
-let htmlEditor;
-let cssEditor;
-let jsEditor;
+// let cssElement;
+// let jsElement;
+// let cssEditor;
+// let jsEditor;
 onMounted(() => {
-  htmlElement = document.querySelector('#htmlEditor');
-  cssElement = document.querySelector('#cssEditor');
-  jsElement = document.querySelector('#jsEditor');
-
-  // htmlEditor = useMonaco(htmlElement, 'html');
-  cssEditor = useMonaco(cssElement, 'html');
-  jsEditor = useMonaco(jsElement, 'html');
+  // cssElement = document.querySelector('#cssEditor');
+  // jsElement = document.querySelector('#jsEditor');
+  // cssEditor = useMonaco(cssElement, 'html');
+  // jsEditor = useMonaco(jsElement, 'html');
   // webEditor = useMonaco(document.querySelector('#editor'), 'html');
   // transformSFC(FILE_STORE, FILE_STORE.files[activeFile.value]);
   // webEditor.getModel().onDidChangeContent(
@@ -89,12 +81,6 @@ onUnmounted(() => {
 // function setEditorTheme(theme) {
 //   Monaco.editor.setTheme(theme);
 // }
-
-function apple() {
-  resizeListener(htmlEditor, htmlElement);
-  resizeListener(cssEditor, cssElement);
-  resizeListener(jsEditor, jsElement);
-}
 </script>
 <template>
   <div id="editor-wrapper">
@@ -109,19 +95,12 @@ function apple() {
         <html-editor />
       </pane>
       <pane max-size="70">
-        <div class="wrapper">
-          <h5>CSS</h5>
-          <div id="cssEditor" class="editor"></div>
-        </div>
+        <css-editor />
       </pane>
       <pane max-size="70">
-        <div class="wrapper">
-          <h5>JavaScript</h5>
-          <div id="jsEditor" class="editor"></div>
-        </div>
+        <js-editor />
       </pane>
     </splitpanes>
-    <!-- <FileSystem /> -->
   </div>
 </template>
 

@@ -1,23 +1,19 @@
 <script setup>
-import { onUnmounted, onMounted } from 'vue';
+import { onMounted, inject, watch } from 'vue';
 import { useMonaco } from '@/utils/useMonaco';
-import {
-  appendListener,
-  removeListener,
-  resizeListener,
-} from '@/utils/utility';
+import { resizeListener } from '@/utils/utility';
+
 let element;
 let editor;
-let resize;
+const { isResizing } = inject('getResizing');
+
+watch(isResizing, () => {
+  resizeListener(editor, element);
+});
 
 onMounted(() => {
   element = document.querySelector('#jsEditor');
   editor = useMonaco(element, 'javascript');
-  resize = resizeListener(editor, element);
-  appendListener(element, 'resize', resize);
-});
-onUnmounted(() => {
-  removeListener(element, 'resize', resize);
 });
 </script>
 <template>
