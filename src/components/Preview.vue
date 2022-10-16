@@ -6,7 +6,10 @@ import {
   useImportMap,
 } from '../store/useFileStore';
 import srcdoc from '../output/playground.html?raw';
-import { compileModulesForPreview } from '../output/moduleComplier';
+import {
+  compileModulesForPreview,
+  compileStoreForPreview,
+} from '../output/moduleComplier';
 import { appendListener, removeListener } from '../utils/utility';
 import Message from '@/components/Message.vue';
 
@@ -62,6 +65,7 @@ function createSandBox() {
   preview.value.appendChild(sandBox);
   appendListener(sandBox, 'load', () => {
     // stopViewWatcher = watchEffect(updateView);
+    stopViewWatcher = watchEffect(sendScriptToView);
   });
 }
 
@@ -87,6 +91,24 @@ function updateView() {
         }
         _mount()
         `);
+
+  sandBox.contentWindow.postMessage(
+    {
+      action: 'eval',
+      code: codeToEval,
+    },
+    '*'
+  );
+}
+
+function sendScriptToView() {
+  const modules = compileStoreForPreview(FILE_STORE);
+
+  const codeToEval = [
+    `window.__css__ = '';`,
+    ...modules,
+    `document.getElementById('playground_styles').innerHTML = window.__css__`,
+  ];
 
   sandBox.contentWindow.postMessage(
     {

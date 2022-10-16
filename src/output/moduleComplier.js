@@ -248,3 +248,27 @@ export function compileModulesForPreview(store) {
 
   return processed;
 }
+
+export function compileStoreForPreview(store) {
+  console.log(store.files);
+  let processed = [];
+  for (const name in store.files) {
+    processed.push(processor(store.files[name]));
+  }
+  console.log(processed);
+  return processed;
+}
+
+function processor({ fileName, code }) {
+  if (fileName === 'html') {
+    return `document.body.innerHTML = ${JSON.stringify(code)}`;
+  }
+
+  if (fileName === 'javascript') {
+    return JSON.stringify(code);
+  }
+
+  if (fileName === 'css') {
+    return `window.css = ${JSON.stringify(code)}`;
+  }
+}

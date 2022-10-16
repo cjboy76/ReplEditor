@@ -18,8 +18,15 @@ function updateRuntime(code) {
 const useFileStore = defineStore('FILE_STORE', {
   state: () => {
     return {
-      html: '',
+      files: {},
+      eval: {},
     };
+  },
+  getters: {
+    getCode(name) {
+      if (!this.files[name] || !this.files[name][code]) return '';
+      return this.files[name][code];
+    },
   },
   actions: {
     addFile(fileName) {
@@ -28,7 +35,12 @@ const useFileStore = defineStore('FILE_STORE', {
     },
 
     updateFile(code, fileName) {
-      this.files[fileName].code = code;
+      if (!this.files[fileName]) {
+        this.files[fileName] = createFile(fileName, code);
+      } else {
+        this.files[fileName].code = code;
+      }
+      console.log(this.files[fileName]);
     },
 
     removeFile(fileName) {
