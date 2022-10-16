@@ -1,6 +1,7 @@
 <script setup>
-import { onUnmounted, onMounted, ref, watchEffect } from 'vue';
+import { onUnmounted, onMounted, ref, watchEffect, computed } from 'vue';
 import MaterialSymbolsDesktopWindowsOutline from '~icons/material-symbols/desktop-windows-outline';
+import MaterialSymbolsKeyboardArrowDown from '~icons/material-symbols/keyboard-arrow-down';
 import {
   useFileStore,
   defaultMainFile,
@@ -14,6 +15,9 @@ import {
 import { appendListener, removeListener } from '../utils/utility';
 import Message from '@/components/Message.vue';
 import EditorContainer from '@/components/EditorContainer.vue';
+import IcBaselineCheck from '~icons/ic/baseline-check';
+import { Hako } from 'vue-hako';
+import viewSizeOptions from '@/data/screen-size.json';
 
 const preview = ref();
 const FILE_STORE = useFileStore();
@@ -130,19 +134,54 @@ function handleSandboxEvent({ data }) {
     runtimeError.value = value;
   }
 }
+
+const isDefaultSize = computed(() => currentViewSize.value === 'Default');
+const width = computed(() => viewSizeOptions[currentViewSize.value][0]);
+const height = computed(() => viewSizeOptions[currentViewSize.value][1]);
+const toggleViewMenu = ref(false);
+const currentViewSize = ref('Default');
+function toggleMenu() {
+  console.log('etf');
+  toggleViewMenu.value = !toggleViewMenu.value;
+}
+function setViewSize(value) {
+  currentViewSize.value = value;
+}
 </script>
 
 <template>
-  <div style="position: relative" class="container">
-    <div class="title">
-      <span> View </span>
-      <button>
+  <div class="container">
+    <div class="viewTitle">
+      <h5>View</h5>
+      <button @click="toggleMenu" class="menuButton">
         <MaterialSymbolsDesktopWindowsOutline class="icon" />
+        <span> {{ currentViewSize }} </span>
+        <MaterialSymbolsKeyboardArrowDown />
+        <div class="menu" v-show="toggleViewMenu">
+          <div
+            v-for="(_, index) in viewSizeOptions"
+            :key="index"
+            class="option"
+            @click="setViewSize(index)"
+          >
+            <p align="start">
+              {{ index }}
+            </p>
+            <IcBaselineCheck v-show="currentViewSize === index" />
+          </div>
+        </div>
       </button>
     </div>
     <splitpanes class="default-theme" horizontal style="height: 100vh">
       <pane>
-        <div class="preview" ref="preview"></div>
+        <Hako
+          style="height: 100%; width: 100%"
+          :width="width"
+          :height="height"
+          :disable-scaling="isDefaultSize"
+        >
+          <div class="preview" ref="preview"></div>
+        </Hako>
       </pane>
       <pane>
         <editor-container lang="Console">
@@ -156,22 +195,45 @@ function handleSandboxEvent({ data }) {
 <style lang="scss" scoped>
 .container {
   border: 1px solid var(--border-default);
-  .title {
-    padding-left: 10px;
+  .viewTitle {
+    background-color: var(--bg-default);
+    color: var(--text-default);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--bg-default);
-    border-bottom: 1px solid var(--border-default);
-    color: var(--text-default);
-    .icon {
-      color: var(--text-default);
+    h5 {
+      padding-left: 5px;
     }
   }
-
+  .menuButton {
+    position: relative;
+    color: var(--text-default);
+    .menu {
+      z-index: 9999;
+      position: absolute;
+      top: 100%;
+      right: 0%;
+      width: 180px;
+      height: fit-content;
+      // border: 1px solid var(--bg-default);
+      box-shadow: 0px 0px 3px var(--border-default);
+      background-color: var(--bg-default);
+      border-radius: 3px;
+      .option {
+        // display: block;
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        &:hover {
+          background-color: var(--border-default);
+        }
+      }
+    }
+  }
   .preview {
     height: 100%;
-
+    display: flex;
+    place-items: center;
     :deep(iframe) {
       width: 100%;
       height: 100%;

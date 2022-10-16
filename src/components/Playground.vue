@@ -102,6 +102,9 @@ function changeHandler(value, key) {
       </pane>
       <pane>
         <editor-container lang="JavaScript">
+          <template #button>
+            <button>Import Map</button>
+          </template>
           <editor lang="javascript" @on-change="changeHandler" />
         </editor-container>
       </pane>

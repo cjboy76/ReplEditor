@@ -1,8 +1,11 @@
 <template>
   <div class="wrapper">
-    <h5 class="title">
-      {{ props.lang }}
-    </h5>
+    <div class="title">
+      <h5 class="text">
+        {{ props.lang }}
+      </h5>
+      <slot name="button"></slot>
+    </div>
     <slot></slot>
   </div>
 </template>
@@ -13,11 +16,17 @@ const props = defineProps({
 </script>
 <style lang="scss" scoped>
 .wrapper {
-  padding-top: 5px;
-  background: var(--bg-default);
+  // padding-top: 5px;
+  background: var(--bg-secondary);
+  height: 100%;
   .title {
-    color: var(--text-default);
-    padding-left: 10px;
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--bg-default);
+    .text {
+      color: var(--text-default);
+      padding-left: 10px;
+    }
   }
 }
 </style>

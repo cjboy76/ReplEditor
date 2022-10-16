@@ -30,12 +30,11 @@
 
 .splitpanes.default-theme .splitpanes__splitter:hover::before,
 .splitpanes.default-theme .splitpanes__splitter:hover::after {
-  background-color: var(--text-default);
-  box-shadow: 5px 5px 5px teal;
+  background-color: var(--text-highlight);
 }
 
 .splitpanes.default-theme .splitpanes__pane  {
-  background-color: var(--bg-default);
+  background-color: var(--bg-secondary);
 }
 
 button {
