@@ -1,8 +1,8 @@
 <script setup>
 import Fa6SolidMoon from '~icons/fa6-solid/moon';
 import Fa6SolidSun from '~icons/fa6-solid/sun';
-import GithubIcon from '@/components/GithubIcon.vue';
-import { currentRuntimeVersion } from '@/store/useFileStore';
+import MdiGithub from '~icons/mdi/github';
+// import { currentRuntimeVersion } from '@/store/useFileStore';
 import { repository } from '../../package.json';
 import { editor } from 'monaco-editor';
 import { ref } from 'vue';
@@ -41,9 +41,9 @@ function toggleTheme(value) {
             @click="toggleTheme(false)"
           />
         </button>
-        <span>Version @{{ currentRuntimeVersion }}</span>
+        <span>Version: not available</span>
         <a :href="repository.url" target="_blank">
-          <GithubIcon :isDarkMode="isDarkMode" />
+          <MdiGithub class="icon" />
         </a>
       </div>
     </div>
@@ -51,6 +51,10 @@ function toggleTheme(value) {
 </template>
 
 <style lang="scss" scoped>
+a {
+  display: flex;
+  place-items: center;
+}
 .header {
   width: 98%;
   margin: auto;
@@ -68,6 +72,7 @@ function toggleTheme(value) {
     align-items: center;
     .icon {
       cursor: pointer;
+      color: var(--text-default);
     }
     span {
       padding: 0 1rem;

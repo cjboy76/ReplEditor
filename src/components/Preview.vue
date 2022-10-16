@@ -1,5 +1,6 @@
 <script setup>
 import { onUnmounted, onMounted, ref, watchEffect } from 'vue';
+import MaterialSymbolsDesktopWindowsOutline from '~icons/material-symbols/desktop-windows-outline';
 import {
   useFileStore,
   defaultMainFile,
@@ -12,11 +13,12 @@ import {
 } from '../output/moduleComplier';
 import { appendListener, removeListener } from '../utils/utility';
 import Message from '@/components/Message.vue';
+import EditorContainer from '@/components/EditorContainer.vue';
 
 const preview = ref();
 const FILE_STORE = useFileStore();
 const IMPORT_MAP = useImportMap();
-const error = ref('');
+const runtimeError = ref(null);
 let sandBox;
 let stopViewWatcher;
 
@@ -102,6 +104,7 @@ function updateView() {
 }
 
 function sendScriptToView() {
+  runtimeError.value = null;
   const modules = compileStoreForPreview(FILE_STORE);
 
   const codeToEval = [
@@ -119,32 +122,62 @@ function sendScriptToView() {
   );
 }
 
-function handleSandboxEvent(event) {
-  const { action, value } = event.data;
+function handleSandboxEvent({ data }) {
+  console.log(data);
+  const { action, value } = data;
+  console.log(value);
   if (action === 'error') {
-    error.value = value;
+    runtimeError.value = value;
   }
 }
 </script>
 
 <template>
-  <div id="preview" style="position: relative">
-    <h5>View</h5>
-    <div class="preview" ref="preview"></div>
-
-    <!-- <Message :error="error" /> -->
+  <div style="position: relative" class="container">
+    <div class="title">
+      <span> View </span>
+      <button>
+        <MaterialSymbolsDesktopWindowsOutline class="icon" />
+      </button>
+    </div>
+    <splitpanes class="default-theme" horizontal style="height: 100vh">
+      <pane>
+        <div class="preview" ref="preview"></div>
+      </pane>
+      <pane>
+        <editor-container lang="Console">
+          <Message :error="runtimeError" />
+        </editor-container>
+      </pane>
+    </splitpanes>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.preview {
+.container {
   border: 1px solid var(--border-default);
-  height: 100vh;
-  :deep(iframe) {
-    width: 100%;
+  .title {
+    padding-left: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-default);
+    border-bottom: 1px solid var(--border-default);
+    color: var(--text-default);
+    .icon {
+      color: var(--text-default);
+    }
+  }
+
+  .preview {
     height: 100%;
-    border: none;
-    background-color: #fff;
+
+    :deep(iframe) {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background-color: #fff;
+    }
   }
 }
 </style>

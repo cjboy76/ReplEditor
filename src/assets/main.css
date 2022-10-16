@@ -23,3 +23,27 @@
   border-left: 1px solid var(--border-default);
 }
 
+.splitpanes.default-theme .splitpanes__splitter::before,
+.splitpanes.default-theme .splitpanes__splitter::after {
+  background-color: var(--text-default);
+}
+
+.splitpanes.default-theme .splitpanes__splitter:hover::before,
+.splitpanes.default-theme .splitpanes__splitter:hover::after {
+  background-color: var(--text-default);
+  box-shadow: 5px 5px 5px teal;
+}
+
+.splitpanes.default-theme .splitpanes__pane  {
+  background-color: var(--bg-default);
+}
+
+button {
+  border: none;
+  padding: 5px;
+  display: flex;
+  place-items: center;
+  cursor: pointer;
+  background-color: transparent;
+}
+

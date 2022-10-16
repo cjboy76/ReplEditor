@@ -1,6 +1,8 @@
 <template>
   <div class="wrapper">
-    <h5 class="title">{{ props.lang }}</h5>
+    <h5 class="title">
+      {{ props.lang }}
+    </h5>
     <slot></slot>
   </div>
 </template>
@@ -15,7 +17,7 @@ const props = defineProps({
   background: var(--bg-default);
   .title {
     color: var(--text-default);
-    margin-left: 10px;
+    padding-left: 10px;
   }
 }
 </style>
