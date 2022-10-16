@@ -14,7 +14,7 @@
 
 <script>
 export default {
-  name: "GithubIcon",
+  name: 'GithubIcon',
   props: {
     isDarkMode: {
       type: Boolean,
@@ -22,7 +22,7 @@ export default {
   },
   computed: {
     colorTheme() {
-      return this.isDarkMode ? "#fff" : "#555";
+      return this.isDarkMode ? 'rgb(216, 200, 200)' : '#555';
     },
   },
 };

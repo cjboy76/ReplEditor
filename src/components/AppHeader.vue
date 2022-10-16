@@ -1,12 +1,24 @@
 <script setup>
-import { inject } from 'vue';
 import Fa6SolidMoon from '~icons/fa6-solid/moon';
 import Fa6SolidSun from '~icons/fa6-solid/sun';
 import GithubIcon from '@/components/GithubIcon.vue';
 import { currentRuntimeVersion } from '@/store/useFileStore';
 import { repository } from '../../package.json';
+import { editor } from 'monaco-editor';
+import { ref } from 'vue';
 
-const { isDarkMode, toggleTheme } = inject('themeMode');
+const isDarkMode = ref(false);
+
+function toggleTheme(value) {
+  isDarkMode.value = value;
+  if (value) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    editor.setTheme('vitesse-dark');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
+    editor.setTheme('vitesse-light');
+  }
+}
 </script>
 
 <template>
@@ -18,11 +30,15 @@ const { isDarkMode, toggleTheme } = inject('themeMode');
           class="toggleTheme"
           :class="{ spin_right: isDarkMode, spin_left: !isDarkMode }"
         >
-          <Fa6SolidSun v-show="isDarkMode" class="icon" @click="toggleTheme" />
-          <Fa6SolidMoon
+          <Fa6SolidSun
             v-show="!isDarkMode"
             class="icon"
-            @click="toggleTheme"
+            @click="toggleTheme(true)"
+          />
+          <Fa6SolidMoon
+            v-show="isDarkMode"
+            class="icon"
+            @click="toggleTheme(false)"
           />
         </button>
         <span>Version @{{ currentRuntimeVersion }}</span>
@@ -43,10 +59,7 @@ const { isDarkMode, toggleTheme } = inject('themeMode');
   justify-content: space-between;
   align-items: center;
   .headerText {
-    background: -webkit-linear-gradient(0.9turn, #3f87a6, #ebf8e1, #f69d3c);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--text-default);
   }
 
   .options {

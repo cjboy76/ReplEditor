@@ -13,23 +13,23 @@ const FILE_STORE = useFileStore();
 // import { transformSFC } from '@/output/transform';
 // import FileSystem from '@/components/FileSystem.vue';
 
-const { activeFile } = inject('activeFile');
-const { isDarkMode } = inject('themeMode');
+// const { activeFile } = inject('activeFile');
+// const { isDarkMode } = inject('themeMode');
 // const FILE_STORE = useFileStore();
 // const IMPORT_MAP = useImportMap();
 // let webEditor;
 
-watch(activeFile, (newValue) => {
-  setEditorContent(newValue);
-});
+// watch(activeFile, (newValue) => {
+//   setEditorContent(newValue);
+// });
 
-watch(isDarkMode, (newValue) => {
-  if (!newValue) {
-    setEditorTheme('vitesse-light');
-  } else {
-    setEditorTheme('vitesse-dark');
-  }
-});
+// watch(isDarkMode, (newValue) => {
+//   if (!newValue) {
+//     setEditorTheme('vitesse-light');
+//   } else {
+//     setEditorTheme('vitesse-dark');
+//   }
+// });
 // let cssElement;
 // let jsElement;
 // let cssEditor;
@@ -88,7 +88,7 @@ function changeHandler(value, key) {
 }
 </script>
 <template>
-  <div id="editor-wrapper">
+  <div class="playground">
     <splitpanes class="default-theme" horizontal style="height: 100vh">
       <pane>
         <editor-container lang="HTML">
@@ -108,3 +108,9 @@ function changeHandler(value, key) {
     </splitpanes>
   </div>
 </template>
+
+<style scoped>
+.playground {
+  border-top: 1px solid var(--border-default);
+}
+</style>

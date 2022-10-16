@@ -129,6 +129,7 @@ function handleSandboxEvent(event) {
 
 <template>
   <div id="preview" style="position: relative">
+    <h5>View</h5>
     <div class="preview" ref="preview"></div>
 
     <!-- <Message :error="error" /> -->
@@ -137,6 +138,7 @@ function handleSandboxEvent(event) {
 
 <style lang="scss" scoped>
 .preview {
+  border: 1px solid var(--border-default);
   height: 100vh;
   :deep(iframe) {
     width: 100%;

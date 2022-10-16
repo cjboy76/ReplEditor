@@ -95,24 +95,11 @@ function createFile(fileName, code = '') {
   };
 }
 
-const isDarkMode = ref(true);
-
-function toggleTheme() {
-  isDarkMode.value = !isDarkMode.value;
-  if (isDarkMode.value) {
-    document.documentElement.setAttribute('data-theme', 'dark');
-  } else {
-    document.documentElement.setAttribute('data-theme', 'light');
-  }
-}
-
 export {
   defaultMainFile,
   activeFile,
   updateActiveFile,
   useFileStore,
-  isDarkMode,
-  toggleTheme,
   useImportMap,
   currentRuntimeVersion,
 };

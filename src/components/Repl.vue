@@ -4,12 +4,12 @@ import { provide } from 'vue';
 import Playground from '@/components/Playground.vue';
 import Preview from '@/components/Preview.vue';
 // import { resizeListener } from '@/utils/useMonaco';
-import {
-  activeFile,
-  updateActiveFile,
-  isDarkMode,
-  toggleTheme,
-} from '@/store/useFileStore';
+// import {
+//   activeFile,
+//   updateActiveFile,
+//   isDarkMode,
+//   toggleTheme,
+// } from '@/store/useFileStore';
 import AppHeader from '@/components/AppHeader.vue';
 
 // onMounted(() => {
@@ -21,9 +21,6 @@ import AppHeader from '@/components/AppHeader.vue';
 //     },
 //   });
 // });
-
-provide('themeMode', { isDarkMode, toggleTheme });
-provide('activeFile', { activeFile, updateActiveFile });
 </script>
 
 <template>
@@ -44,7 +41,6 @@ provide('activeFile', { activeFile, updateActiveFile });
 #Repl {
   display: flex;
   height: 100%;
-  border-top: 0.5px solid var(--border-default);
 }
 // .gutter {
 //   background-color: var(--text-default);

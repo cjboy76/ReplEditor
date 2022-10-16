@@ -1,8 +1,6 @@
 <template>
   <div class="wrapper">
-    <div class="title">
-      <h5>{{ props.lang }}</h5>
-    </div>
+    <h5 class="title">{{ props.lang }}</h5>
     <slot></slot>
   </div>
 </template>
@@ -11,13 +9,13 @@ const props = defineProps({
   lang: String,
 });
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .wrapper {
-  border: 1px solid #eee;
-  padding: 5px;
+  padding-top: 5px;
+  background: var(--bg-default);
   .title {
-    display: flex;
-    justify-content: space-between;
+    color: var(--text-default);
+    margin-left: 10px;
   }
 }
 </style>
