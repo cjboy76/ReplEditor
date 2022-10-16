@@ -21,10 +21,17 @@ onMounted(() => {
     FILE_STORE.updateFile(editor.getValue(), 'javascript');
   });
 });
+
+function formatHandler() {
+  editor.getAction('editor.action.formatDocument')._run();
+}
 </script>
 <template>
   <div class="wrapper">
-    <h5>JavaScript</h5>
+    <div class="title">
+      <h5>JavaScript</h5>
+      <button class="formatButton" @click="formatHandler">✨</button>
+    </div>
     <div id="jsEditor" class="editor"></div>
   </div>
 </template>

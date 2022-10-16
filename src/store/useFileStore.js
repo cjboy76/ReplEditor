@@ -40,7 +40,6 @@ const useFileStore = defineStore('FILE_STORE', {
       } else {
         this.files[fileName].code = code;
       }
-      console.log(this.files[fileName]);
     },
 
     removeFile(fileName) {

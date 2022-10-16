@@ -109,6 +109,14 @@ onUnmounted(() => {
   border: 1px solid black;
   .wrapper {
     padding: 5px;
+    .title {
+      display: flex;
+      justify-content: space-between;
+      .formatButton {
+        border: none;
+        cursor: pointer;
+      }
+    }
     .editor {
       height: 100vh;
       width: 100%;

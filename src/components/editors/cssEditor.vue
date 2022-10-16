@@ -21,10 +21,18 @@ onMounted(() => {
     FILE_STORE.updateFile(editor.getValue(), 'css');
   });
 });
+
+async function formatHandler() {
+  console.log(editor);
+  await editor.getAction('editor.action.formatDocument').run();
+}
 </script>
 <template>
   <div class="wrapper">
-    <h5>CSS</h5>
+    <div class="title">
+      <h5>CSS</h5>
+      <button class="formatButton" @click="formatHandler">✨</button>
+    </div>
     <div id="cssEditor" class="editor"></div>
   </div>
 </template>

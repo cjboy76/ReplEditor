@@ -131,7 +131,7 @@ function handleSandboxEvent(event) {
   <div id="preview" style="position: relative">
     <div class="preview" ref="preview"></div>
 
-    <Message :error="error" />
+    <!-- <Message :error="error" /> -->
   </div>
 </template>
 

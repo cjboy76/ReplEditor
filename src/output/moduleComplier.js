@@ -250,12 +250,10 @@ export function compileModulesForPreview(store) {
 }
 
 export function compileStoreForPreview(store) {
-  console.log(store.files);
   let processed = [];
   for (const name in store.files) {
     processed.push(processor(store.files[name]));
   }
-  console.log(processed);
   return processed;
 }
 
@@ -265,10 +263,10 @@ function processor({ fileName, code }) {
   }
 
   if (fileName === 'javascript') {
-    return JSON.stringify(code);
+    return code;
   }
 
   if (fileName === 'css') {
-    return `window.css = ${JSON.stringify(code)}`;
+    return `window.__css__ = ${JSON.stringify(code, null, 2)}`;
   }
 }

@@ -15,16 +15,24 @@ watch(isResizing, () => {
 
 onMounted(() => {
   element = document.querySelector('#htmlEditor');
-  editor = useMonaco(element, 'html');
+  editor = useMonaco(element, 'css');
 
   editor.getModel().onDidChangeContent(() => {
-    FILE_STORE.updateFile(editor.getValue(), 'html');
+    FILE_STORE.updateFile(editor.getValue(), 'css');
   });
 });
+
+function formatHandler() {
+  editor.getAction('editor.action.formatDocument')._run();
+  console.log(editor.getAction('editor.action.formatDocument'));
+}
 </script>
 <template>
   <div class="wrapper">
-    <h5>HTML</h5>
+    <div class="title">
+      <h5>HTML</h5>
+      <button class="formatButton" @click="formatHandler">✨</button>
+    </div>
     <div id="htmlEditor" class="editor"></div>
   </div>
 </template>

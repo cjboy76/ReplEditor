@@ -28,7 +28,7 @@
         const handleMessages = async (ev) => {
           try {
             const { action, code } = ev.data;
-            if (action === "eval") {
+            if (action === 'eval') {
               if (scriptElements.length) {
                 scriptElements.forEach((el) => {
                   document.head.removeChild(el);
@@ -37,8 +37,8 @@
               }
 
               for (const script of code) {
-                let scriptEl = document.createElement("script");
-                scriptEl.setAttribute("type", "module");
+                let scriptEl = document.createElement('script');
+                scriptEl.setAttribute('type', 'module');
 
                 const done = new Promise((resolve) => {
                   window.__next__ = resolve;
@@ -55,18 +55,18 @@
             throw err.message;
           }
         };
-        window.addEventListener("message", handleMessages, false);
+        window.addEventListener('message', handleMessages, false);
 
         window.onerror = function (msg, url, lineNo, columnNo, error) {
           console.log(msg, error);
-          if (msg.includes("module specifier “vue”")) {
+          if (msg.includes('module specifier “vue”')) {
             // firefox only error, ignore
             return false;
           }
           try {
-            parent.postMessage({ action: "error", value: error }, "*");
+            parent.postMessage({ action: 'error', value: error }, '*');
           } catch (e) {
-            parent.postMessage({ action: "error", value: msg }, "*");
+            parent.postMessage({ action: 'error', value: msg }, '*');
           }
         };
       })();
