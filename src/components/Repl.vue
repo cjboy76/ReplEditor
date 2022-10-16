@@ -1,7 +1,7 @@
 <script setup>
 // import Split from 'split.js';
-import { onMounted, provide, ref } from 'vue';
-import Editor from '@/components/Editor.vue';
+import { provide } from 'vue';
+import Playground from '@/components/Playground.vue';
 import Preview from '@/components/Preview.vue';
 // import { resizeListener } from '@/utils/useMonaco';
 import {
@@ -24,29 +24,14 @@ import AppHeader from '@/components/AppHeader.vue';
 
 provide('themeMode', { isDarkMode, toggleTheme });
 provide('activeFile', { activeFile, updateActiveFile });
-
-const isResizing = ref(false);
-function setResizing(value) {
-  console.log(value);
-  isResizing.value = value;
-}
-
-provide('getResizing', {
-  isResizing,
-  setResizing,
-});
 </script>
 
 <template>
   <AppHeader />
   <div id="Repl">
-    <splitpanes
-      class="default-theme"
-      @resize="setResizing(true)"
-      @resized="setResizing(false)"
-    >
+    <splitpanes class="default-theme">
       <pane>
-        <Editor />
+        <Playground />
       </pane>
       <pane>
         <Preview />
