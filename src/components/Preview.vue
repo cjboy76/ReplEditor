@@ -173,9 +173,9 @@ function setViewSize(value) {
       </button>
     </div>
     <splitpanes class="default-theme" horizontal style="height: 100vh">
-      <pane>
+      <pane :class="{ 'py-10px': !isDefaultSize }">
         <Hako
-          style="height: 100%; width: 100%"
+          style="height: 100%"
           :width="width"
           :height="height"
           :disable-scaling="isDefaultSize"
@@ -232,8 +232,6 @@ function setViewSize(value) {
   }
   .preview {
     height: 100%;
-    display: flex;
-    place-items: center;
     :deep(iframe) {
       width: 100%;
       height: 100%;
@@ -241,5 +239,8 @@ function setViewSize(value) {
       background-color: #fff;
     }
   }
+}
+.py-10px {
+  padding: 10px 0;
 }
 </style>
