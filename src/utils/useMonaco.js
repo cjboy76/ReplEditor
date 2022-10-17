@@ -31,18 +31,18 @@ async function loadMonacoEnv() {
   }
 }
 
-function useMonaco(element, language, code = '') {
+function useMonaco(element, language, args) {
   loadMonacoEnv();
   editor.defineTheme('vitesse-dark', darktheme);
   editor.defineTheme('vitesse-light', lightTheme);
 
   const monacoEditor = editor.create(element, {
     language,
-    value: code,
     theme: 'vitesse-light',
     minimap: {
       enabled: false,
     },
+    ...args,
   });
 
   return monacoEditor;

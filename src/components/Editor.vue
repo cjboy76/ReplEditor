@@ -10,7 +10,7 @@ const emit = defineEmits(['onChange']);
 const target = ref();
 
 onMounted(() => {
-  const editor = useMonaco(target.value, props.lang, props.code);
+  const editor = useMonaco(target.value, props.lang, { value: props.code });
   editor.getModel().onDidChangeContent(() => {
     emit('onChange', editor.getValue(), props.lang);
   });

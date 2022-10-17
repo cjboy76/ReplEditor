@@ -7,6 +7,8 @@ import { repository } from '../../package.json';
 import { editor } from 'monaco-editor';
 import { ref } from 'vue';
 
+const emits = defineEmits(['openModal']);
+
 const isDarkMode = ref(false);
 
 function toggleTheme(value) {
@@ -41,7 +43,8 @@ function toggleTheme(value) {
             @click="toggleTheme(false)"
           />
         </button>
-        <span>Version: not available</span>
+        <!-- <span>Version: not available</span> -->
+        <button @click="emits('openModal')">Import Map</button>
         <a :href="repository.url" target="_blank">
           <MdiGithub class="icon" />
         </a>

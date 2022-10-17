@@ -127,9 +127,7 @@ function sendScriptToView() {
 }
 
 function handleSandboxEvent({ data }) {
-  console.log(data);
   const { action, value } = data;
-  console.log(value);
   if (action === 'error') {
     runtimeError.value = value;
   }
@@ -141,7 +139,6 @@ const height = computed(() => viewSizeOptions[currentViewSize.value][1]);
 const toggleViewMenu = ref(false);
 const currentViewSize = ref('Default');
 function toggleMenu() {
-  console.log('etf');
   toggleViewMenu.value = !toggleViewMenu.value;
 }
 function setViewSize(value) {
