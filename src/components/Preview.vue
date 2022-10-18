@@ -13,7 +13,7 @@ import {
   compileStoreForPreview,
 } from '../output/moduleComplier';
 import { appendListener, removeListener } from '../utils/utility';
-import Message from '@/components/Message.vue';
+import Console from '@/components/Console.vue';
 import EditorContainer from '@/components/EditorContainer.vue';
 import IcBaselineCheck from '~icons/ic/baseline-check';
 import { Hako } from 'vue-hako';
@@ -109,6 +109,7 @@ function updateView() {
 
 function sendScriptToView() {
   runtimeError.value = null;
+  console.clear();
   const modules = compileStoreForPreview(FILE_STORE);
 
   const codeToEval = [
@@ -182,7 +183,7 @@ function setViewSize(value) {
       </pane>
       <pane>
         <editor-container lang="Console">
-          <Message :error="runtimeError" />
+          <Console :error="runtimeError" />
         </editor-container>
       </pane>
     </splitpanes>
