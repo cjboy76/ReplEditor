@@ -1,7 +1,7 @@
 <script setup>
 import Editor from '@/components/Editor.vue';
 import EditorContainer from '@/components/EditorContainer.vue';
-import { onUnmounted, onMounted, watch, inject } from 'vue';
+import { onUnmounted, onMounted, watch, inject, ref, computed } from 'vue';
 import { useFileStore } from '@/store/useFileStore';
 
 const FILE_STORE = useFileStore();
@@ -86,6 +86,17 @@ onUnmounted(() => {
 function changeHandler(value, key) {
   FILE_STORE.updateFile(value, key);
 }
+
+const importMapOn = ref(false);
+const toggleJsEditorLang = computed(() => {
+  return importMapOn.value ? 'JSON' : 'javascript';
+});
+const toggleJsEditorTitle = computed(() => {
+  return importMapOn.value ? 'JSON' : 'JavaScript';
+});
+function toggleImportMap() {
+  importMapOn.value = !importMapOn.value;
+}
 </script>
 <template>
   <div class="playground">
@@ -101,11 +112,16 @@ function changeHandler(value, key) {
         </editor-container>
       </pane>
       <pane>
-        <editor-container lang="JavaScript">
+        <editor-container :lang="toggleJsEditorTitle">
           <template #button>
-            <button>Import Map</button>
+            <button
+              @click="toggleImportMap"
+              :class="{ triggerStyle: importMapOn }"
+            >
+              Import Map
+            </button>
           </template>
-          <editor lang="javascript" @on-change="changeHandler" />
+          <editor :lang="toggleJsEditorLang" @on-change="changeHandler" />
         </editor-container>
       </pane>
     </splitpanes>
@@ -115,5 +131,10 @@ function changeHandler(value, key) {
 <style scoped>
 .playground {
   border-top: 1px solid var(--border-default);
+}
+
+.triggerStyle {
+  color: var(--bg-secondary);
+  background-color: var(--text-highlight);
 }
 </style>

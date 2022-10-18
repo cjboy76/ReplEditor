@@ -44,5 +44,6 @@ button {
   place-items: center;
   cursor: pointer;
   background-color: transparent;
+  border-radius: 3px;
 }
 

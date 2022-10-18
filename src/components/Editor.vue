@@ -1,20 +1,31 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useMonaco } from '@/utils/useMonaco';
+import { editor } from 'monaco-editor';
 
 const props = defineProps({
   lang: String,
   code: String,
 });
-const emit = defineEmits(['onChange']);
+const emits = defineEmits(['onChange']);
 const target = ref();
+let monacoEditor;
 
 onMounted(() => {
-  const editor = useMonaco(target.value, props.lang, { value: props.code });
-  editor.getModel().onDidChangeContent(() => {
-    emit('onChange', editor.getValue(), props.lang);
+  monacoEditor = useMonaco(target.value, props.lang, {
+    value: props.code,
+  });
+  monacoEditor.getModel().onDidChangeContent(() => {
+    emits('onChange', monacoEditor.getValue(), props.lang);
   });
 });
+
+watch(
+  () => props.lang,
+  (newVale) => {
+    editor.setModelLanguage(monacoEditor.getModel(), newVale);
+  }
+);
 </script>
 <template>
   <div ref="target" class="editor"></div>
