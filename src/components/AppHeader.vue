@@ -43,8 +43,7 @@ function toggleTheme(value) {
             @click="toggleTheme(false)"
           />
         </button>
-        <!-- <span>Version: not available</span> -->
-        <button @click="emits('openModal')">Import Map</button>
+        <span>Version: not available</span>
         <a :href="repository.url" target="_blank">
           <MdiGithub class="icon" />
         </a>
