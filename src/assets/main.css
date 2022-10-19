@@ -38,6 +38,7 @@
 }
 
 button {
+  color: var(--text-default);
   border: none;
   padding: 5px;
   display: flex;

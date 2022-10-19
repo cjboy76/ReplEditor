@@ -22,12 +22,6 @@ const useFileStore = defineStore('FILE_STORE', {
       eval: {},
     };
   },
-  getters: {
-    getCode(name) {
-      if (!this.files[name] || !this.files[name][code]) return '';
-      return this.files[name][code];
-    },
-  },
   actions: {
     addFile(fileName) {
       const newFile = createFile(fileName);
@@ -57,9 +51,7 @@ const useImportMap = defineStore('IMPORT_MAP', {
     return {
       importMap: JSON.stringify(
         {
-          imports: {
-            vue: vueRuntimeURL.value,
-          },
+          imports: {},
         },
         null,
         2
@@ -73,7 +65,7 @@ const useImportMap = defineStore('IMPORT_MAP', {
       if (json.imports.vue) {
         updateRuntime(json.imports.vue);
       } else {
-        console.error('Please define Vue Runtime version.');
+        throw Error('Please define Vue Runtime version.');
       }
     },
   },

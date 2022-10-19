@@ -1,8 +1,8 @@
 <script setup>
-import Editor from '@/components/Editor.vue';
-import EditorContainer from '@/components/EditorContainer.vue';
-import { onUnmounted, onMounted, watch, inject, ref, computed } from 'vue';
+import { Editor, EditorContainer } from '@/components/crafts';
+import { onUnmounted, onMounted, ref, computed } from 'vue';
 import { useFileStore } from '@/store/useFileStore';
+import JsEditor from '@/components/JsEditor.vue';
 
 const FILE_STORE = useFileStore();
 
@@ -112,17 +112,7 @@ function toggleImportMap() {
         </editor-container>
       </pane>
       <pane>
-        <editor-container :lang="toggleJsEditorTitle">
-          <template #button>
-            <button
-              @click="toggleImportMap"
-              :class="{ triggerStyle: importMapOn }"
-            >
-              Import Map
-            </button>
-          </template>
-          <editor :lang="toggleJsEditorLang" @on-change="changeHandler" />
-        </editor-container>
+        <js-editor @on-change="changeHandler"></js-editor>
       </pane>
     </splitpanes>
   </div>
@@ -131,10 +121,5 @@ function toggleImportMap() {
 <style scoped>
 .playground {
   border-top: 1px solid var(--border-default);
-}
-
-.triggerStyle {
-  color: var(--bg-secondary);
-  background-color: var(--text-highlight);
 }
 </style>

@@ -22,8 +22,14 @@ onMounted(() => {
 
 watch(
   () => props.lang,
-  (newVale) => {
-    editor.setModelLanguage(monacoEditor.getModel(), newVale);
+  (newValue) => {
+    editor.setModelLanguage(monacoEditor.getModel(), newValue);
+  }
+);
+watch(
+  () => props.code,
+  (newValue) => {
+    monacoEditor.getModel().setValue(newValue);
   }
 );
 </script>

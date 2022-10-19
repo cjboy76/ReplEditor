@@ -13,8 +13,8 @@ import {
   compileStoreForPreview,
 } from '../output/moduleComplier';
 import { appendListener, removeListener } from '../utils/utility';
-import Console from '@/components/Console.vue';
-import EditorContainer from '@/components/EditorContainer.vue';
+import { Console } from '@/components/crafts';
+import { EditorContainer } from '@/components/crafts';
 import IcBaselineCheck from '~icons/ic/baseline-check';
 import { Hako } from 'vue-hako';
 import viewSizeOptions from '@/data/screen-size.json';
@@ -109,7 +109,7 @@ function updateView() {
 
 function sendScriptToView() {
   runtimeError.value = null;
-  console.clear();
+  // console.clear();
   const modules = compileStoreForPreview(FILE_STORE);
 
   const codeToEval = [
