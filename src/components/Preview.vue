@@ -2,6 +2,8 @@
 import { onUnmounted, onMounted, ref, watchEffect, computed } from 'vue';
 import MaterialSymbolsDesktopWindowsOutline from '~icons/material-symbols/desktop-windows-outline';
 import MaterialSymbolsKeyboardArrowDown from '~icons/material-symbols/keyboard-arrow-down';
+import IcBaselineCheck from '~icons/ic/baseline-check';
+import { Console, EditorContainer } from '@/components/crafts';
 import {
   useFileStore,
   defaultMainFile,
@@ -13,9 +15,6 @@ import {
   compileStoreForPreview,
 } from '../output/moduleComplier';
 import { appendListener, removeListener } from '../utils/utility';
-import { Console } from '@/components/crafts';
-import { EditorContainer } from '@/components/crafts';
-import IcBaselineCheck from '~icons/ic/baseline-check';
 import { Hako } from 'vue-hako';
 import viewSizeOptions from '@/data/screen-size.json';
 
@@ -26,6 +25,7 @@ const runtimeError = ref(null);
 let sandBox;
 let stopViewWatcher;
 
+console.log(IMPORT_MAP);
 IMPORT_MAP.$subscribe(() => {
   createSandBox();
 });
@@ -62,7 +62,6 @@ function createSandBox() {
       'allow-top-navigation-by-user-activation',
     ].join(' ')
   );
-
   const sandBoxSrc = srcdoc.replace(
     /<!--IMPORT_MAP-->/,
     IMPORT_MAP.$state.importMap

@@ -1,10 +1,11 @@
 <script setup>
 import { Editor, EditorContainer } from '@/components/crafts';
-import { onUnmounted, onMounted, ref, computed } from 'vue';
-import { useFileStore } from '@/store/useFileStore';
+import { onUnmounted, onMounted } from 'vue';
+import { useFileStore, useImportMap } from '@/store/useFileStore';
 import JsEditor from '@/components/JsEditor.vue';
 
 const FILE_STORE = useFileStore();
+const IMPORT_MAP = useImportMap();
 
 // import { useFileStore, useImportMap } from '@/store/useFileStore';
 // import { debounce, appendListener, removeListener } from '@/utils/utility';
@@ -84,18 +85,11 @@ onUnmounted(() => {
 // }
 
 function changeHandler(value, key) {
-  FILE_STORE.updateFile(value, key);
-}
-
-const importMapOn = ref(false);
-const toggleJsEditorLang = computed(() => {
-  return importMapOn.value ? 'JSON' : 'javascript';
-});
-const toggleJsEditorTitle = computed(() => {
-  return importMapOn.value ? 'JSON' : 'JavaScript';
-});
-function toggleImportMap() {
-  importMapOn.value = !importMapOn.value;
+  if (key === 'JSON') {
+    IMPORT_MAP.updateImportMap(value);
+  } else if (key === 'javascript') {
+    FILE_STORE.updateFile(value, key);
+  }
 }
 </script>
 <template>

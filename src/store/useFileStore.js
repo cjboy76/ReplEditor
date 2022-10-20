@@ -51,7 +51,9 @@ const useImportMap = defineStore('IMPORT_MAP', {
     return {
       importMap: JSON.stringify(
         {
-          imports: {},
+          imports: {
+            vue: vueRuntimeURL.value,
+          },
         },
         null,
         2
@@ -64,8 +66,6 @@ const useImportMap = defineStore('IMPORT_MAP', {
       let json = JSON.parse(code);
       if (json.imports.vue) {
         updateRuntime(json.imports.vue);
-      } else {
-        throw Error('Please define Vue Runtime version.');
       }
     },
   },
