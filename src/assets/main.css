@@ -1,0 +1,50 @@
+@import './variables.scss';
+
+* {
+  margin: 0;
+  padding: 0;
+}
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg-default);
+}
+
+.splitpanes.default-theme .splitpanes__splitter {
+  min-width: 1rem;
+  min-height: 1rem;
+  background-color: var(--bg-default);
+  border-bottom: 1px solid var(--border-default);
+  border-top: 1px solid var(--border-default);
+  border-left: 1px solid var(--border-default);
+}
+
+.splitpanes.default-theme .splitpanes__splitter::before,
+.splitpanes.default-theme .splitpanes__splitter::after {
+  background-color: var(--text-default);
+}
+
+.splitpanes.default-theme .splitpanes__splitter:hover::before,
+.splitpanes.default-theme .splitpanes__splitter:hover::after {
+  background-color: var(--text-highlight);
+}
+
+.splitpanes.default-theme .splitpanes__pane  {
+  background-color: var(--bg-secondary);
+}
+
+button {
+  color: var(--text-default);
+  border: none;
+  padding: 5px;
+  display: flex;
+  place-items: center;
+  cursor: pointer;
+  background-color: transparent;
+  border-radius: 3px;
+}
+

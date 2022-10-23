@@ -1,28 +1,11 @@
-import { defineStore } from "pinia";
-import { computed, ref } from "vue";
+import { defineStore } from 'pinia';
+import { computed, ref } from 'vue';
 
-const defaultMainFile = "App.vue";
+const defaultMainFile = 'App.vue';
 const activeFile = ref(defaultMainFile);
-const VueWelcomeCode = `<script setup>
-import { ref } from 'vue'
-
-const msg = ref('Hello Vue!')
-</script>
-
-<template>
-  <h1>{{ msg }}</h1>
-  <input v-model="msg">
-</template>
-
-<style>
-  h1 {
-    color: rebeccapurple
-  }
-</style>
-`;
 
 const vueRuntimeURL = ref(
-  "https://unpkg.com/@vue/runtime-dom@3.2.8/dist/runtime-dom.esm-browser.js"
+  'https://unpkg.com/@vue/runtime-dom@3.2.8/dist/runtime-dom.esm-browser.js'
 );
 
 const currentRuntimeVersion = computed(() => {
@@ -32,13 +15,26 @@ const currentRuntimeVersion = computed(() => {
 function updateRuntime(code) {
   vueRuntimeURL.value = code;
 }
-const useFileStore = defineStore("FILE_STORE", {
+const useFileStore = defineStore('FILE_STORE', {
   state: () => {
     return {
-      files: {
-        "App.vue": createFile(defaultMainFile, VueWelcomeCode),
-      },
+      files: {},
     };
+  },
+  getters: {
+    getSFC(state) {
+      return `
+        <script setup>
+          ${state.files['javascript'] ? state.files['javascript'].code : ''}
+        </script>
+        <template>
+          ${state.files['html'] ? state.files['html'].code : ''}
+        </template>
+        <style scoped>
+          ${state.files['css'] ? state.files['css'].code : ''}
+        </style>
+      `;
+    },
   },
   actions: {
     addFile(fileName) {
@@ -47,7 +43,11 @@ const useFileStore = defineStore("FILE_STORE", {
     },
 
     updateFile(code, fileName) {
-      this.files[fileName].code = code;
+      if (!this.files[fileName]) {
+        this.files[fileName] = createFile(fileName, code);
+      } else {
+        this.files[fileName].code = code;
+      }
     },
 
     removeFile(fileName) {
@@ -60,7 +60,7 @@ const useFileStore = defineStore("FILE_STORE", {
   },
 });
 
-const useImportMap = defineStore("IMPORT_MAP", {
+const useImportMap = defineStore('IMPORT_MAP', {
   state: () => {
     return {
       importMap: JSON.stringify(
@@ -80,8 +80,6 @@ const useImportMap = defineStore("IMPORT_MAP", {
       let json = JSON.parse(code);
       if (json.imports.vue) {
         updateRuntime(json.imports.vue);
-      } else {
-        console.error("Please define Vue Runtime version.");
       }
     },
   },
@@ -91,37 +89,23 @@ function updateActiveFile(curActiveFile) {
   activeFile.value = curActiveFile;
 }
 
-function createFile(fileName, code = "") {
+function createFile(fileName, code = '') {
   return {
     fileName,
     code,
     compiled: {
-      js: "",
-      css: "",
-      ssr: "",
+      js: '',
+      css: '',
+      ssr: '',
     },
   };
-}
-
-const isDarkMode = ref(true);
-
-function toggleTheme() {
-  isDarkMode.value = !isDarkMode.value;
-  if (isDarkMode.value) {
-    document.documentElement.setAttribute("data-theme", "dark");
-  } else {
-    document.documentElement.setAttribute("data-theme", "light");
-  }
 }
 
 export {
   defaultMainFile,
   activeFile,
   updateActiveFile,
-  VueWelcomeCode,
   useFileStore,
-  isDarkMode,
-  toggleTheme,
   useImportMap,
   currentRuntimeVersion,
 };

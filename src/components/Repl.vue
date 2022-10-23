@@ -1,49 +1,52 @@
 <script setup>
-import Split from "split.js";
-import { onMounted, provide } from "vue";
-import Editor from "@/components/Editor.vue";
-import Preview from "@/components/Preview.vue";
-import { editorResize } from "@/utils/monaco";
-import {
-  activeFile,
-  updateActiveFile,
-  isDarkMode,
-  toggleTheme,
-} from "@/store/useFileStore";
-import AppHeader from "@/components/AppHeader.vue";
+// import Split from 'split.js';
+// import { provide } from 'vue';
+import Playground from '@/components/Playground.vue';
+import Preview from '@/components/Preview.vue';
+// import { resizeListener } from '@/utils/useMonaco';
+// import {
+//   activeFile,
+//   updateActiveFile,
+//   isDarkMode,
+//   toggleTheme,
+// } from '@/store/useFileStore';
+import AppHeader from '@/components/AppHeader.vue';
+import { ref, watch } from 'vue';
 
-onMounted(() => {
-  Split(["#editor-wrapper", "#preview"], {
-    gutterSize: 10,
-    sizes: [50, 50],
-    onDrag() {
-      editorResize();
-    },
-  });
-});
-
-provide("themeMode", { isDarkMode, toggleTheme });
-provide("activeFile", { activeFile, updateActiveFile });
+// onMounted(() => {
+//   Split(['#editor-wrapper', '#preview'], {
+//     gutterSize: 10,
+//     sizes: [50, 50],
+//     onDrag() {
+//       resizeListener();
+//     },
+//   });
+// });
 </script>
 
 <template>
   <AppHeader />
-  <div id="Mario">
-    <Editor />
-    <Preview />
+  <div id="Repl">
+    <splitpanes class="default-theme">
+      <pane>
+        <Playground />
+      </pane>
+      <pane>
+        <Preview />
+      </pane>
+    </splitpanes>
   </div>
 </template>
 
 <style lang="scss" scoped>
-#Mario {
+#Repl {
   display: flex;
   height: 100%;
-  border-top: 0.5px solid var(--border-default);
 }
-.gutter {
-  background-color: var(--text-default);
-}
-.gutter:hover {
-  cursor: col-resize;
-}
+// .gutter {
+//   background-color: var(--text-default);
+// }
+// .gutter:hover {
+//   cursor: col-resize;
+// }
 </style>

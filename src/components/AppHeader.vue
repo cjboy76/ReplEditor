@@ -1,33 +1,52 @@
 <script setup>
-import { inject } from 'vue';
 import Fa6SolidMoon from '~icons/fa6-solid/moon';
 import Fa6SolidSun from '~icons/fa6-solid/sun';
-import GithubIcon from '@/components/GithubIcon.vue';
-import { currentRuntimeVersion } from '@/store/useFileStore';
+import MdiGithub from '~icons/mdi/github';
+import { Switch } from '@/components/crafts';
 import { repository } from '../../package.json';
+import { editor } from 'monaco-editor';
+import { inject, ref } from 'vue';
 
-const { isDarkMode, toggleTheme } = inject('themeMode');
+const emits = defineEmits(['openModal']);
+const { setVueMode } = inject('vueMode');
+const isDarkMode = ref(false);
+
+function toggleTheme(value) {
+  isDarkMode.value = value;
+  if (value) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    editor.setTheme('vitesse-dark');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
+    editor.setTheme('vitesse-light');
+  }
+}
 </script>
 
 <template>
   <header>
     <div class="header">
-      <h1 class="headerText">Vue Playground</h1>
+      <h1 class="headerText">ReplEditor</h1>
       <div class="options">
         <button
           class="toggleTheme"
           :class="{ spin_right: isDarkMode, spin_left: !isDarkMode }"
         >
-          <Fa6SolidSun v-show="isDarkMode" class="icon" @click="toggleTheme" />
-          <Fa6SolidMoon
+          <Fa6SolidSun
             v-show="!isDarkMode"
             class="icon"
-            @click="toggleTheme"
+            @click="toggleTheme(true)"
+          />
+          <Fa6SolidMoon
+            v-show="isDarkMode"
+            class="icon"
+            @click="toggleTheme(false)"
           />
         </button>
-        <span>Version @{{ currentRuntimeVersion }}</span>
+        <Switch text="Vue" color="#00897B" @on-change="setVueMode" />
+
         <a :href="repository.url" target="_blank">
-          <GithubIcon :isDarkMode="isDarkMode" />
+          <MdiGithub class="icon" />
         </a>
       </div>
     </div>
@@ -35,26 +54,30 @@ const { isDarkMode, toggleTheme } = inject('themeMode');
 </template>
 
 <style lang="scss" scoped>
+a {
+  display: flex;
+  place-items: center;
+}
 .header {
-  width: 98%;
+  width: 95%;
   margin: auto;
   color: var(--text-default);
   display: flex;
   justify-content: space-between;
   align-items: center;
   .headerText {
-    background: -webkit-linear-gradient(0.9turn, #3f87a6, #ebf8e1, #f69d3c);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--text-default);
   }
 
   .options {
+    width: 12%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     .icon {
       cursor: pointer;
+      color: var(--text-default);
+      font-size: 15px;
     }
     span {
       padding: 0 1rem;

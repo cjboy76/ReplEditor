@@ -1,7 +1,14 @@
 import hashId from 'hash-sum';
-import * as defaultCompiler from '@vue/compiler-sfc';
+import {
+  shouldTransformRef,
+  transformRef,
+  parse,
+  compileStyle,
+  compileScript,
+  rewriteDefault,
+  compileTemplate,
+} from '@vue/compiler-sfc';
 
-const { shouldTransformRef, transformRef } = defaultCompiler;
 const COMP_IDENTIFIER = `__sfc__`;
 
 export const transformSFC = async (store, { code, fileName }) => {
@@ -17,7 +24,7 @@ export const transformSFC = async (store, { code, fileName }) => {
 
   let clientCode = '';
 
-  const { descriptor } = defaultCompiler.parse(code, {
+  const { descriptor } = parse(code, {
     filename: fileName,
     sourceMap: true,
   });
@@ -57,7 +64,7 @@ export const transformSFC = async (store, { code, fileName }) => {
   // style
   let css = '';
   for (const style of descriptor.styles) {
-    const styleResult = defaultCompiler.compileStyle({
+    const styleResult = compileStyle({
       source: style.content,
       filename: fileName,
       id,
@@ -78,8 +85,8 @@ export const transformSFC = async (store, { code, fileName }) => {
   );
 };
 
-async function doCompileTemplate(store, descriptor, id, bindingMetadata, ssr) {
-  const templateResult = await defaultCompiler.compileTemplate({
+function doCompileTemplate(store, descriptor, id, bindingMetadata, ssr) {
+  const templateResult = compileTemplate({
     source: descriptor.template.content,
     filename: descriptor.filename,
     id,
@@ -112,7 +119,7 @@ async function doCompileScript(descriptor, id) {
     return [`\nconst ${COMP_IDENTIFIER} = {}`, undefined];
   }
   try {
-    const compiledScript = await defaultCompiler.compileScript(descriptor, {
+    const compiledScript = await compileScript(descriptor, {
       inlineTemplate: true,
       id,
       templateOptions: {
@@ -122,8 +129,7 @@ async function doCompileScript(descriptor, id) {
 
     let outputCode = '';
     outputCode +=
-      `\n` +
-      defaultCompiler.rewriteDefault(compiledScript.content, COMP_IDENTIFIER);
+      `\n` + rewriteDefault(compiledScript.content, COMP_IDENTIFIER);
 
     return [outputCode, compiledScript.bindings];
   } catch (e) {
