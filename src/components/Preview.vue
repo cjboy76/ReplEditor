@@ -87,6 +87,8 @@ function createSandBox() {
 
 function updateView() {
   if (!vueMode.value) return;
+  runtimeError.value = null;
+  console.clear();
   const modules = vueCompiler(FILE_STORE);
   const codeToEval = [
     `window.__modules__ = {};window.__css__ = '';` +
@@ -122,7 +124,7 @@ function sendScriptToView() {
   if (vueMode.value) return;
 
   runtimeError.value = null;
-  // console.clear();
+  console.clear();
   const modules = rawCompiler(FILE_STORE);
 
   const codeToEval = [

@@ -93,10 +93,8 @@ function changeHandler(value, key) {
     FILE_STORE.updateFile(value, key);
   }
 
-  if (vueMode.value) {
-    FILE_STORE.updateFile(FILE_STORE.getSFC, 'App.vue');
-    transformSFC(FILE_STORE, FILE_STORE.files['App.vue']);
-  }
+  FILE_STORE.updateFile(FILE_STORE.getSFC, 'App.vue');
+  transformSFC(FILE_STORE, FILE_STORE.files['App.vue']);
 }
 </script>
 <template>
