@@ -1,17 +1,19 @@
 <script setup>
 import { Editor, EditorContainer } from '@/components/crafts';
-import { onUnmounted, onMounted } from 'vue';
+import { onUnmounted, onMounted, inject } from 'vue';
 import { useFileStore, useImportMap } from '@/store/useFileStore';
+// import { SFCFormat } from '@/utils/utility';
+import { transformSFC } from '@/output/transform';
 import JsEditor from '@/components/JsEditor.vue';
 
 const FILE_STORE = useFileStore();
 const IMPORT_MAP = useImportMap();
+const { vueMode } = inject('vueMode');
 
 // import { useFileStore, useImportMap } from '@/store/useFileStore';
 // import { debounce, appendListener, removeListener } from '@/utils/utility';
 // import { resizeListener } from '@/utils/utility';
 
-// import { transformSFC } from '@/output/transform';
 // import FileSystem from '@/components/FileSystem.vue';
 
 // const { activeFile } = inject('activeFile');
@@ -87,8 +89,13 @@ onUnmounted(() => {
 function changeHandler(value, key) {
   if (key === 'JSON') {
     IMPORT_MAP.updateImportMap(value);
-  } else if (key === 'javascript') {
+  } else {
     FILE_STORE.updateFile(value, key);
+  }
+
+  if (vueMode.value) {
+    FILE_STORE.updateFile(FILE_STORE.getSFC, 'App.vue');
+    transformSFC(FILE_STORE, FILE_STORE.files['App.vue']);
   }
 }
 </script>

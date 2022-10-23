@@ -6,6 +6,7 @@ import {
   watchEffect,
   computed,
   inject,
+  watch,
 } from 'vue';
 import MaterialSymbolsDesktopWindowsOutline from '~icons/material-symbols/desktop-windows-outline';
 import MaterialSymbolsKeyboardArrowDown from '~icons/material-symbols/keyboard-arrow-down';
@@ -22,18 +23,20 @@ import { appendListener, removeListener } from '../utils/utility';
 import { Hako } from 'vue-hako';
 import viewSizeOptions from '@/data/screen-size.json';
 
+const { vueMode } = inject('vueMode');
 const preview = ref();
 const FILE_STORE = useFileStore();
 const IMPORT_MAP = useImportMap();
 const runtimeError = ref(null);
 let sandBox;
-let stopViewWatcher;
+let stopWatcher;
 
 IMPORT_MAP.$subscribe(() => {
   createSandBox();
 });
-
-const { vueMode } = inject('vueMode');
+watch(vueMode, () => {
+  createSandBox();
+});
 
 onMounted(() => {
   createSandBox();
@@ -44,13 +47,13 @@ onUnmounted(() => {
   removeListener(sandBox, 'load', () => {
     watchEffect(updateView);
   });
-  stopViewWatcher && stopViewWatcher();
+  stopWatcher && stopWatcher();
   removeListener(window, 'message', handleSandboxEvent);
 });
 
 function createSandBox() {
   if (sandBox) {
-    stopViewWatcher && stopViewWatcher();
+    stopWatcher && stopWatcher();
     preview.value.removeChild(sandBox);
   }
 
@@ -74,12 +77,16 @@ function createSandBox() {
   sandBox.srcdoc = sandBoxSrc;
   preview.value.appendChild(sandBox);
   appendListener(sandBox, 'load', () => {
-    // stopViewWatcher = watchEffect(updateView);
-    stopViewWatcher = watchEffect(sendScriptToView);
+    if (vueMode.value) {
+      stopWatcher = watchEffect(updateView);
+    } else {
+      stopWatcher = watchEffect(sendScriptToView);
+    }
   });
 }
 
 function updateView() {
+  if (!vueMode.value) return;
   const modules = vueCompiler(FILE_STORE);
   const codeToEval = [
     `window.__modules__ = {};window.__css__ = '';` +
@@ -112,7 +119,7 @@ function updateView() {
 }
 
 function sendScriptToView() {
-  console.log(vueMode.value);
+  if (vueMode.value) return;
 
   runtimeError.value = null;
   // console.clear();

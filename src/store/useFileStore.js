@@ -19,8 +19,22 @@ const useFileStore = defineStore('FILE_STORE', {
   state: () => {
     return {
       files: {},
-      eval: {},
     };
+  },
+  getters: {
+    getSFC(state) {
+      return `
+        <script setup>
+          ${state.files['javascript'] ? state.files['javascript'].code : ''}
+        </script>
+        <template>
+          ${state.files['html'] ? state.files['html'].code : ''}
+        </template>
+        <style scoped>
+          ${state.files['css'] ? state.files['css'].code : ''}
+        </style>
+      `;
+    },
   },
   actions: {
     addFile(fileName) {
