@@ -2,13 +2,13 @@
 import Fa6SolidMoon from '~icons/fa6-solid/moon';
 import Fa6SolidSun from '~icons/fa6-solid/sun';
 import MdiGithub from '~icons/mdi/github';
-// import { currentRuntimeVersion } from '@/store/useFileStore';
+import { Switch } from '@/components/crafts';
 import { repository } from '../../package.json';
 import { editor } from 'monaco-editor';
-import { ref } from 'vue';
+import { inject, ref } from 'vue';
 
 const emits = defineEmits(['openModal']);
-
+const { setVueMode } = inject('vueMode');
 const isDarkMode = ref(false);
 
 function toggleTheme(value) {
@@ -43,7 +43,8 @@ function toggleTheme(value) {
             @click="toggleTheme(false)"
           />
         </button>
-        <span>Version: not available</span>
+        <Switch text="Vue" color="#00897B" @on-change="setVueMode" />
+
         <a :href="repository.url" target="_blank">
           <MdiGithub class="icon" />
         </a>
@@ -58,7 +59,7 @@ a {
   place-items: center;
 }
 .header {
-  width: 98%;
+  width: 95%;
   margin: auto;
   color: var(--text-default);
   display: flex;
@@ -69,12 +70,14 @@ a {
   }
 
   .options {
+    width: 12%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     .icon {
       cursor: pointer;
       color: var(--text-default);
+      font-size: 15px;
     }
     span {
       padding: 0 1rem;

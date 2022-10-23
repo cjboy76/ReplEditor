@@ -1,5 +1,12 @@
 <script setup>
-import { onUnmounted, onMounted, ref, watchEffect, computed } from 'vue';
+import {
+  onUnmounted,
+  onMounted,
+  ref,
+  watchEffect,
+  computed,
+  inject,
+} from 'vue';
 import MaterialSymbolsDesktopWindowsOutline from '~icons/material-symbols/desktop-windows-outline';
 import MaterialSymbolsKeyboardArrowDown from '~icons/material-symbols/keyboard-arrow-down';
 import IcBaselineCheck from '~icons/ic/baseline-check';
@@ -10,10 +17,7 @@ import {
   useImportMap,
 } from '../store/useFileStore';
 import srcdoc from '../output/playground.html?raw';
-import {
-  compileModulesForPreview,
-  compileStoreForPreview,
-} from '../output/moduleComplier';
+import { vueCompiler, rawCompiler } from '../output/moduleComplier';
 import { appendListener, removeListener } from '../utils/utility';
 import { Hako } from 'vue-hako';
 import viewSizeOptions from '@/data/screen-size.json';
@@ -25,10 +29,11 @@ const runtimeError = ref(null);
 let sandBox;
 let stopViewWatcher;
 
-console.log(IMPORT_MAP);
 IMPORT_MAP.$subscribe(() => {
   createSandBox();
 });
+
+const { vueMode } = inject('vueMode');
 
 onMounted(() => {
   createSandBox();
@@ -75,7 +80,7 @@ function createSandBox() {
 }
 
 function updateView() {
-  const modules = compileModulesForPreview(FILE_STORE);
+  const modules = vueCompiler(FILE_STORE);
   const codeToEval = [
     `window.__modules__ = {};window.__css__ = '';` +
       `if (window.__app__) window.__app__.unmount();` +
@@ -107,9 +112,11 @@ function updateView() {
 }
 
 function sendScriptToView() {
+  console.log(vueMode.value);
+
   runtimeError.value = null;
   // console.clear();
-  const modules = compileStoreForPreview(FILE_STORE);
+  const modules = rawCompiler(FILE_STORE);
 
   const codeToEval = [
     `window.__css__ = '';`,

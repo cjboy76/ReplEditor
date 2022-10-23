@@ -229,7 +229,7 @@ function processFile(store, file, processed, seen) {
   processed.push(js);
 }
 
-export function compileModulesForPreview(store) {
+export function vueCompiler(store) {
   const seen = new Set();
   const processed = [];
   processFile(store, defaultMainFile, processed, seen);
@@ -249,15 +249,15 @@ export function compileModulesForPreview(store) {
   return processed;
 }
 
-export function compileStoreForPreview(store) {
+export function rawCompiler(store) {
   let processed = [];
   for (const name in store.files) {
-    processed.push(processor(store.files[name]));
+    processed.push(rawProcessor(store.files[name]));
   }
   return processed;
 }
 
-function processor({ fileName, code }) {
+function rawProcessor({ fileName, code }) {
   if (fileName === 'html') {
     return `document.body.innerHTML = ${JSON.stringify(code)}`;
   }
