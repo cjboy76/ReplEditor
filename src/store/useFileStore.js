@@ -1,5 +1,10 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
+import {
+  defaultHtml,
+  defaultCss,
+  defaultJavascript,
+} from '@/store/globalStatus';
 
 const defaultMainFile = 'App.vue';
 const activeFile = ref(defaultMainFile);
@@ -18,7 +23,11 @@ function updateRuntime(code) {
 const useFileStore = defineStore('FILE_STORE', {
   state: () => {
     return {
-      files: {},
+      files: {
+        html: createFile('html', defaultHtml),
+        css: createFile('css', defaultCss),
+        javascript: createFile('javascript', defaultJavascript),
+      },
     };
   },
   getters: {

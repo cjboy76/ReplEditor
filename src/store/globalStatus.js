@@ -2,10 +2,16 @@ import { ref } from 'vue';
 
 const vueMode = ref(false);
 
-const defaultHtml = `<h1> Hello {{ title }} </h1>`;
+const defaultHtml = `<div id="app">
+  <div>
+    <h1> Hello {{ title }} </h1>
+    <p align="center">Switch on Vue mode 👆</p>
+  </div>
+</div>
+`;
 const defaultCss = `#app {
-  background-color: darkcyan;
   height: 100vh;
+  background-color: darkcyan;
   color: white;
   display: grid;
   place-items: center

@@ -263,10 +263,11 @@ function rawProcessor({ fileName, code }) {
   }
 
   if (fileName === 'javascript') {
-    return code;
+    return code.replaceAll('"', "'");
   }
 
   if (fileName === 'css') {
-    return `window.__css__ = ${JSON.stringify(code, null, 2)}`;
+    return `window.__css__ = '${code.replace(/(\r\n|\n|\r)/gm, '')}'`;
   }
+  return '';
 }

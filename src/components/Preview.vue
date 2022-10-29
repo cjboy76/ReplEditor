@@ -45,7 +45,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   removeListener(sandBox, 'load', () => {
-    watchEffect(updateView);
+    watchEffect(updateVueView);
   });
   stopWatcher && stopWatcher();
   removeListener(window, 'message', handleSandboxEvent);
@@ -78,14 +78,14 @@ function createSandBox() {
   preview.value.appendChild(sandBox);
   appendListener(sandBox, 'load', () => {
     if (vueMode.value) {
-      stopWatcher = watchEffect(updateView);
+      stopWatcher = watchEffect(updateVueView);
     } else {
-      stopWatcher = watchEffect(sendScriptToView);
+      stopWatcher = watchEffect(updateRawView);
     }
   });
 }
 
-function updateView() {
+function updateVueView() {
   if (!vueMode.value) return;
   runtimeError.value = null;
   console.clear();
@@ -120,9 +120,8 @@ function updateView() {
   );
 }
 
-function sendScriptToView() {
+function updateRawView() {
   if (vueMode.value) return;
-
   runtimeError.value = null;
   console.clear();
   const modules = rawCompiler(FILE_STORE);

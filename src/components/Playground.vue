@@ -3,9 +3,20 @@ import { Editor, EditorContainer } from '@/components/crafts';
 import { useFileStore, useImportMap } from '@/store/useFileStore';
 import { transformSFC } from '@/output/transform';
 import JsEditor from '@/components/JsEditor.vue';
+import { defaultHtml, defaultCss } from '@/store/globalStatus';
+import { onMounted } from 'vue';
 
 const FILE_STORE = useFileStore();
 const IMPORT_MAP = useImportMap();
+
+onMounted(() => {
+  compileForVue();
+});
+
+function compileForVue() {
+  FILE_STORE.updateFile(FILE_STORE.getSFC, 'App.vue');
+  transformSFC(FILE_STORE, FILE_STORE.files['App.vue']);
+}
 
 function changeHandler(value, key) {
   if (key === 'JSON') {
@@ -13,9 +24,7 @@ function changeHandler(value, key) {
   } else {
     FILE_STORE.updateFile(value, key);
   }
-
-  FILE_STORE.updateFile(FILE_STORE.getSFC, 'App.vue');
-  transformSFC(FILE_STORE, FILE_STORE.files['App.vue']);
+  compileForVue();
 }
 </script>
 <template>
@@ -23,12 +32,12 @@ function changeHandler(value, key) {
     <splitpanes class="default-theme" horizontal style="height: 100vh">
       <pane>
         <editor-container lang="HTML">
-          <editor lang="html" @on-change="changeHandler" />
+          <editor lang="html" @on-change="changeHandler" :code="defaultHtml" />
         </editor-container>
       </pane>
       <pane>
         <editor-container lang="CSS">
-          <editor lang="css" @on-change="changeHandler" />
+          <editor lang="css" @on-change="changeHandler" :code="defaultCss" />
         </editor-container>
       </pane>
       <pane>

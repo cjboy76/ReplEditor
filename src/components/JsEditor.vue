@@ -8,14 +8,16 @@
     <editor :lang="language" :code="code" @on-change="changeHandler" />
   </editor-container>
 </template>
+
 <script setup>
 import { Editor, EditorContainer } from '@/components/crafts';
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useFileStore, useImportMap } from '@/store/useFileStore';
+import { defaultJavascript } from '@/store/globalStatus';
 
 const IMPORT_MAP_STORE = useImportMap();
 const FILE_STORE = useFileStore();
-const code = ref('');
+const code = ref(defaultJavascript);
 const language = ref('javascript');
 const title = ref('JavaScript');
 const importMapOn = ref(false);
@@ -31,10 +33,6 @@ watch(
       : getCode(FILE_STORE.files, 'javascript');
   }
 );
-
-onMounted(() => {
-  code.value = getCode(FILE_STORE.files, language.value);
-});
 
 function getCode(store, key) {
   if (!store[key] || !store[key].code) return '';
