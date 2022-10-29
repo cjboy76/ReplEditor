@@ -1,27 +1,7 @@
 <script setup>
-// import Split from 'split.js';
-// import { provide } from 'vue';
 import Playground from '@/components/Playground.vue';
 import Preview from '@/components/Preview.vue';
-// import { resizeListener } from '@/utils/useMonaco';
-// import {
-//   activeFile,
-//   updateActiveFile,
-//   isDarkMode,
-//   toggleTheme,
-// } from '@/store/useFileStore';
 import AppHeader from '@/components/AppHeader.vue';
-import { ref, watch } from 'vue';
-
-// onMounted(() => {
-//   Split(['#editor-wrapper', '#preview'], {
-//     gutterSize: 10,
-//     sizes: [50, 50],
-//     onDrag() {
-//       resizeListener();
-//     },
-//   });
-// });
 </script>
 
 <template>
@@ -43,10 +23,4 @@ import { ref, watch } from 'vue';
   display: flex;
   height: 100%;
 }
-// .gutter {
-//   background-color: var(--text-default);
-// }
-// .gutter:hover {
-//   cursor: col-resize;
-// }
 </style>

@@ -28,6 +28,8 @@ function toggleTheme(value) {
     <div class="header">
       <h1 class="headerText">ReplEditor</h1>
       <div class="options">
+        <Switch text="Vue" color="#00897B" @on-change="setVueMode" />
+
         <button
           class="toggleTheme"
           :class="{ spin_right: isDarkMode, spin_left: !isDarkMode }"
@@ -43,7 +45,6 @@ function toggleTheme(value) {
             @click="toggleTheme(false)"
           />
         </button>
-        <Switch text="Vue" color="#00897B" @on-change="setVueMode" />
 
         <a :href="repository.url" target="_blank">
           <MdiGithub class="icon" />
