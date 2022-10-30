@@ -1,10 +1,18 @@
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
-import {
-  defaultHtml,
-  defaultCss,
-  defaultJavascript,
-} from '@/store/globalStatus';
+import { ref } from 'vue';
+import { defaultHtml, defaultCss, defaultJavascript } from './globalStatus';
+
+type File = {
+  fileName: string;
+  code: string;
+  compiled: {
+    js: string;
+    css: string;
+    ssr: string;
+  };
+};
+type FileName = 'html' | 'css' | 'javascript' | 'App.vue';
+type Files = Record<FileName, File>;
 
 const defaultMainFile = 'App.vue';
 const activeFile = ref(defaultMainFile);
@@ -13,11 +21,7 @@ const vueRuntimeURL = ref(
   'https://unpkg.com/@vue/runtime-dom@3.2.8/dist/runtime-dom.esm-browser.js'
 );
 
-const currentRuntimeVersion = computed(() => {
-  return vueRuntimeURL.value.match(/[1-9]\d*(\.[1-9]\d*)*/gi)[0];
-});
-
-function updateRuntime(code) {
+function updateRuntime(code: string) {
   vueRuntimeURL.value = code;
 }
 const useFileStore = defineStore('FILE_STORE', {
@@ -27,7 +31,7 @@ const useFileStore = defineStore('FILE_STORE', {
         html: createFile('html', defaultHtml),
         css: createFile('css', defaultCss),
         javascript: createFile('javascript', defaultJavascript),
-      },
+      } as Partial<Files>,
     };
   },
   getters: {
@@ -46,25 +50,28 @@ const useFileStore = defineStore('FILE_STORE', {
     },
   },
   actions: {
-    addFile(fileName) {
+    addFile(fileName: FileName) {
       const newFile = createFile(fileName);
       this.files[fileName] = newFile;
     },
 
-    updateFile(code, fileName) {
+    updateFile(code: string, fileName: FileName) {
       if (!this.files[fileName]) {
         this.files[fileName] = createFile(fileName, code);
       } else {
-        this.files[fileName].code = code;
+        this.files[fileName]!.code = code;
       }
     },
 
-    removeFile(fileName) {
+    removeFile(fileName: FileName) {
       delete this.files[fileName];
     },
 
-    updateCompiledFile(compiled, fileName) {
-      this.files[fileName].compiled = compiled;
+    updateCompiledFile(
+      compiled: { js: string; css: string; ssr: string },
+      fileName: FileName
+    ) {
+      this.files[fileName]!.compiled = compiled;
     },
   },
 });
@@ -84,7 +91,7 @@ const useImportMap = defineStore('IMPORT_MAP', {
     };
   },
   actions: {
-    updateImportMap(code) {
+    updateImportMap(code: string) {
       this.importMap = code;
       let json = JSON.parse(code);
       if (json.imports.vue) {
@@ -94,11 +101,11 @@ const useImportMap = defineStore('IMPORT_MAP', {
   },
 });
 
-function updateActiveFile(curActiveFile) {
+function updateActiveFile(curActiveFile: string) {
   activeFile.value = curActiveFile;
 }
 
-function createFile(fileName, code = '') {
+function createFile(fileName: string, code = ''): File {
   return {
     fileName,
     code,
@@ -116,5 +123,4 @@ export {
   updateActiveFile,
   useFileStore,
   useImportMap,
-  currentRuntimeVersion,
 };
