@@ -5,6 +5,7 @@ import { Splitpanes, Pane } from 'splitpanes';
 import { vueMode, setVueMode } from './store/globalStatus';
 import 'splitpanes/dist/splitpanes.css';
 import '@/assets/main.css';
+import './utils/userWorker';
 
 createApp(App)
   .use(createPinia())

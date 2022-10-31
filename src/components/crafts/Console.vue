@@ -1,14 +1,14 @@
-<script setup>
-const props = defineProps({
-  error: Error,
-});
+<script setup lang="ts">
+const props = defineProps<{
+  error: Error;
+}>();
 </script>
 
 <template>
   <div v-show="error" class="block">
     <div class="badge">ERROR</div>
     <span class="message">
-      {{ error }}
+      {{ props.error }}
     </span>
   </div>
 </template>

@@ -1,15 +1,15 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
-import { useMonaco } from '@/utils/useMonaco';
+import { useMonaco } from '../../utils/useMonaco';
 import { editor } from 'monaco-editor';
 
 const props = defineProps({
-  lang: String,
+  lang: { type: String, required: true },
   code: String,
 });
 const emits = defineEmits(['onChange']);
 const target = ref();
-let monacoEditor;
+let monacoEditor: any;
 
 onMounted(() => {
   monacoEditor = useMonaco(target.value, props.lang, {

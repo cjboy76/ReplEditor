@@ -1,3 +1,9 @@
+<script setup lang="ts">
+const props = defineProps({
+  lang: String,
+});
+</script>
+
 <template>
   <div class="wrapper">
     <div class="title">
@@ -9,11 +15,7 @@
     <slot></slot>
   </div>
 </template>
-<script setup>
-const props = defineProps({
-  lang: String,
-});
-</script>
+
 <style lang="scss" scoped>
 .wrapper {
   // padding-top: 5px;
