@@ -11,8 +11,8 @@ export function debounce(fn: Function, n = 250) {
 }
 
 export function appendListener(
-  el: HTMLElement,
-  event: keyof HTMLElementEventMap,
+  el: any,
+  event: keyof HTMLElementEventMap | Event,
   fn: () => void,
   useCapture = false
 ) {
@@ -20,7 +20,7 @@ export function appendListener(
   el.addEventListener(event, fn, useCapture);
 }
 export function removeListener(
-  el: HTMLElement,
+  el: any,
   event: keyof HTMLElementEventMap,
   fn: () => void,
   useCapture = false

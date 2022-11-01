@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import {
   onUnmounted,
   onMounted,
@@ -11,7 +11,7 @@ import {
 import MaterialSymbolsDesktopWindowsOutline from '~icons/material-symbols/desktop-windows-outline';
 import MaterialSymbolsKeyboardArrowDown from '~icons/material-symbols/keyboard-arrow-down';
 import IcBaselineCheck from '~icons/ic/baseline-check';
-import { Console, EditorContainer } from '@/components/crafts';
+import { Console, EditorContainer } from './crafts';
 import {
   useFileStore,
   defaultMainFile,
@@ -21,15 +21,17 @@ import srcdoc from '../output/playground.html?raw';
 import { vueCompiler, rawCompiler } from '../output/moduleComplier';
 import { appendListener, removeListener } from '../utils/utility';
 import { Hako } from 'vue-hako';
-import viewSizeOptions from '@/data/screen-size.json';
+import viewSizeOptions from '../data/screen-size.json';
+import type { VueModeInjectType } from '../types';
+import type { WatchStopHandle } from 'vue';
 
-const { vueMode } = inject('vueMode');
+const { vueMode } = inject('vueMode') as VueModeInjectType;
 const preview = ref();
 const FILE_STORE = useFileStore();
 const IMPORT_MAP = useImportMap();
-const runtimeError = ref(null);
-let sandBox;
-let stopWatcher;
+const runtimeError = ref();
+let sandBox: any;
+let stopWatcher: WatchStopHandle;
 
 IMPORT_MAP.$subscribe(() => {
   createSandBox();
@@ -87,7 +89,7 @@ function createSandBox() {
 
 function updateVueView() {
   if (!vueMode.value) return;
-  runtimeError.value = null;
+  runtimeError.value = undefined;
   console.clear();
   const modules = vueCompiler(FILE_STORE);
   const codeToEval = [
@@ -122,7 +124,7 @@ function updateVueView() {
 
 function updateRawView() {
   if (vueMode.value) return;
-  runtimeError.value = null;
+  runtimeError.value = undefined;
   console.clear();
   const modules = rawCompiler(FILE_STORE);
 
@@ -141,7 +143,7 @@ function updateRawView() {
   );
 }
 
-function handleSandboxEvent({ data }) {
+function handleSandboxEvent({ data }: any) {
   const { action, value } = data;
   if (action === 'error') {
     runtimeError.value = value;
@@ -152,11 +154,11 @@ const isDefaultSize = computed(() => currentViewSize.value === 'Default');
 const width = computed(() => viewSizeOptions[currentViewSize.value][0]);
 const height = computed(() => viewSizeOptions[currentViewSize.value][1]);
 const toggleViewMenu = ref(false);
-const currentViewSize = ref('Default');
+const currentViewSize = ref<keyof typeof viewSizeOptions>('Default');
 function toggleMenu() {
   toggleViewMenu.value = !toggleViewMenu.value;
 }
-function setViewSize(value) {
+function setViewSize(value: keyof typeof viewSizeOptions) {
   currentViewSize.value = value;
 }
 </script>

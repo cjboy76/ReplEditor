@@ -1,18 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { defaultHtml, defaultCss, defaultJavascript } from './globalStatus';
-
-type File = {
-  fileName: string;
-  code: string;
-  compiled: {
-    js: string;
-    css: string;
-    ssr: string;
-  };
-};
-type FileName = 'html' | 'css' | 'javascript' | 'App.vue';
-type Files = Record<FileName, File>;
+import type { File, FileName, Files } from '../types';
 
 const defaultMainFile = 'App.vue';
 const activeFile = ref(defaultMainFile);
@@ -105,9 +94,9 @@ function updateActiveFile(curActiveFile: string) {
   activeFile.value = curActiveFile;
 }
 
-function createFile(fileName: string, code = ''): File {
+function createFile(filename: string, code = ''): File {
   return {
-    fileName,
+    filename,
     code,
     compiled: {
       js: '',

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{
-  error: Error;
+  error: Error | undefined;
 }>();
 </script>
 
