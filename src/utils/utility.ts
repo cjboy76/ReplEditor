@@ -10,25 +10,6 @@ export function debounce(fn: Function, n = 250) {
   };
 }
 
-export function appendListener(
-  el: any,
-  event: keyof HTMLElementEventMap | Event,
-  fn: () => void,
-  useCapture = false
-) {
-  if (!el) return;
-  el.addEventListener(event, fn, useCapture);
-}
-export function removeListener(
-  el: any,
-  event: keyof HTMLElementEventMap,
-  fn: () => void,
-  useCapture = false
-) {
-  if (!el) return;
-  el.removeEventListener(event, fn, useCapture);
-}
-
 export const resizeListener = (
   editor: Editor.IStandaloneCodeEditor,
   element: HTMLElement

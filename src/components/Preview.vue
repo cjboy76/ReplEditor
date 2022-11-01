@@ -19,7 +19,6 @@ import {
 } from '../store/useFileStore';
 import srcdoc from '../output/playground.html?raw';
 import { vueCompiler, rawCompiler } from '../output/moduleComplier';
-import { appendListener, removeListener } from '../utils/utility';
 import { Hako } from 'vue-hako';
 import viewSizeOptions from '../data/screen-size.json';
 import type { VueModeInjectType } from '../types';
@@ -42,15 +41,15 @@ watch(vueMode, () => {
 
 onMounted(() => {
   createSandBox();
-  appendListener(window, 'message', handleSandboxEvent);
+  window.addEventListener('message', handleSandboxEvent);
 });
 
 onUnmounted(() => {
-  removeListener(sandBox, 'load', () => {
+  sandBox.removeEventListener('load', () => {
     watchEffect(updateVueView);
   });
   stopWatcher && stopWatcher();
-  removeListener(window, 'message', handleSandboxEvent);
+  window.removeEventListener('message', handleSandboxEvent);
 });
 
 function createSandBox() {
@@ -78,7 +77,7 @@ function createSandBox() {
   );
   sandBox.srcdoc = sandBoxSrc;
   preview.value.appendChild(sandBox);
-  appendListener(sandBox, 'load', () => {
+  sandBox.addEventListener('load', () => {
     if (vueMode.value) {
       stopWatcher = watchEffect(updateVueView);
     } else {
@@ -143,22 +142,22 @@ function updateRawView() {
   );
 }
 
-function handleSandboxEvent({ data }: any) {
+function handleSandboxEvent({ data }: MessageEvent) {
   const { action, value } = data;
   if (action === 'error') {
     runtimeError.value = value;
   }
 }
-
+type ViewSizeKeys = keyof typeof viewSizeOptions;
 const isDefaultSize = computed(() => currentViewSize.value === 'Default');
 const width = computed(() => viewSizeOptions[currentViewSize.value][0]);
 const height = computed(() => viewSizeOptions[currentViewSize.value][1]);
 const toggleViewMenu = ref(false);
-const currentViewSize = ref<keyof typeof viewSizeOptions>('Default');
+const currentViewSize = ref<ViewSizeKeys>('Default');
 function toggleMenu() {
   toggleViewMenu.value = !toggleViewMenu.value;
 }
-function setViewSize(value: keyof typeof viewSizeOptions) {
+function setViewSize(value: ViewSizeKeys) {
   currentViewSize.value = value;
 }
 </script>
