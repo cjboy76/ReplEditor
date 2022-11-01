@@ -1,17 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import Fa6SolidMoon from '~icons/fa6-solid/moon';
 import Fa6SolidSun from '~icons/fa6-solid/sun';
 import MdiGithub from '~icons/mdi/github';
-import { Switch } from '@/components/crafts';
+import { Switch } from './crafts';
 import { repository } from '../../package.json';
 import { editor } from 'monaco-editor';
 import { inject, ref } from 'vue';
+import type { VueModeInjectType } from '../types';
 
-const emits = defineEmits(['openModal']);
-const { setVueMode } = inject('vueMode');
+const { setVueMode } = inject('vueMode') as VueModeInjectType;
 const isDarkMode = ref(false);
 
-function toggleTheme(value) {
+function toggleTheme(value: boolean) {
   isDarkMode.value = value;
   if (value) {
     document.documentElement.setAttribute('data-theme', 'dark');
