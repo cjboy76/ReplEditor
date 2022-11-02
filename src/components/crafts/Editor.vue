@@ -2,6 +2,7 @@
 import { onMounted, ref, watch } from 'vue';
 import { useMonaco } from '../../utils/useMonaco';
 import { editor } from 'monaco-editor';
+import type { editor as Editor } from 'monaco-editor';
 
 const props = defineProps({
   lang: { type: String, required: true },
@@ -9,13 +10,13 @@ const props = defineProps({
 });
 const emits = defineEmits(['onChange']);
 const target = ref();
-let monacoEditor: any;
+let monacoEditor: Editor.IStandaloneCodeEditor;
 
 onMounted(() => {
   monacoEditor = useMonaco(target.value, props.lang, {
     value: props.code,
   });
-  monacoEditor.getModel().onDidChangeContent(() => {
+  monacoEditor.getModel()!.onDidChangeContent(() => {
     emits('onChange', monacoEditor.getValue(), props.lang);
   });
 });
@@ -23,13 +24,13 @@ onMounted(() => {
 watch(
   () => props.lang,
   (newValue) => {
-    editor.setModelLanguage(monacoEditor.getModel(), newValue);
+    editor.setModelLanguage(monacoEditor.getModel()!, newValue);
   }
 );
 watch(
   () => props.code,
   (newValue) => {
-    monacoEditor.getModel().setValue(newValue);
+    !!newValue && monacoEditor.getModel()!.setValue(newValue);
   }
 );
 </script>
