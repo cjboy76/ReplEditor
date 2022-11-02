@@ -8,26 +8,32 @@ import {
   isStaticProperty,
 } from '@vue/compiler-sfc';
 import { defaultMainFile } from '../store/useFileStore';
+import type { File, FileName } from '../types';
+import { ExportSpecifier, Identifier, Node } from '@babel/types';
 
 const modulesKey = `__modules__`;
 const exportKey = `__export__`;
 const dynamicImportKey = `__dynamic_import__`;
 const moduleKey = `__module__`;
 
-function processModule(store, src, filename) {
+function processModule(
+  store: any,
+  src: string,
+  filename: FileName
+): [string, Set<FileName>] {
   const s = new MagicString(src);
   const ast = babelParse(src, {
     sourceFilename: filename,
     sourceType: 'module',
   }).program.body;
 
-  const idToImportMap = new Map();
-  const declaredConst = new Set();
-  const importedFiles = new Set();
-  const importToIdMap = new Map();
+  const idToImportMap = new Map<string, string>();
+  const declaredConst = new Set<string>();
+  const importedFiles = new Set<FileName>();
+  const importToIdMap = new Map<string, string>();
 
-  function defineImport(node, source) {
-    const filename = source.replace(/^\.\/+/, '');
+  function defineImport(node: Node, source: string) {
+    const filename = source.replace(/^\.\/+/, '') as FileName;
     if (!(filename in store.$state.files)) {
       throw new Error(`File "${filename}" does not exist.`);
     }
@@ -38,13 +44,13 @@ function processModule(store, src, filename) {
     const id = `__import_${importedFiles.size}__`;
     importToIdMap.set(filename, id);
     s.appendLeft(
-      node.start,
+      node.start!,
       `const ${id} = ${modulesKey}[${JSON.stringify(filename)}]\n`
     );
     return id;
   }
 
-  function defineExport(name, local = name) {
+  function defineExport(name: string, local = name) {
     s.append(`\n${exportKey}(${moduleKey}, "${name}", () => ${local})`);
   }
 
@@ -68,16 +74,16 @@ function processModule(store, src, filename) {
           if (spec.type === 'ImportSpecifier') {
             idToImportMap.set(
               spec.local.name,
-              `${importId}.${spec.imported.name}`
+              `${importId}.${(spec.imported as Identifier).name}`
             );
           } else if (spec.type === 'ImportDefaultSpecifier') {
             idToImportMap.set(spec.local.name, `${importId}.default`);
           } else {
             // namespace specifier
-            idToImportMap.set(spec.local.name, importId);
+            idToImportMap.set(spec.local.name, importId!);
           }
         }
-        s.remove(node.start, node.end);
+        s.remove(node.start!, node.end!);
       }
     }
   }
@@ -92,7 +98,7 @@ function processModule(store, src, filename) {
           node.declaration.type === 'ClassDeclaration'
         ) {
           // export function foo() {}
-          defineExport(node.declaration.id.name);
+          defineExport(node.declaration.id!.name);
         } else if (node.declaration.type === 'VariableDeclaration') {
           // export const foo = 1, bar = 2
           for (const decl of node.declaration.declarations) {
@@ -101,22 +107,25 @@ function processModule(store, src, filename) {
             }
           }
         }
-        s.remove(node.start, node.declaration.start);
+        s.remove(node.start!, node.declaration.start!);
       } else if (node.source) {
         // export { foo, bar } from './foo'
         const importId = defineImport(node, node.source.value);
         for (const spec of node.specifiers) {
-          defineExport(spec.exported.name, `${importId}.${spec.local.name}`);
+          defineExport(
+            (spec.exported as Identifier).name,
+            `${importId}.${(spec as ExportSpecifier).local.name}`
+          );
         }
-        s.remove(node.start, node.end);
+        s.remove(node.start!, node.end!);
       } else {
         // export { foo, bar }
         for (const spec of node.specifiers) {
-          const local = spec.local.name;
+          const local = (spec as ExportSpecifier).local.name;
           const binding = idToImportMap.get(local);
-          defineExport(spec.exported.name, binding || local);
+          defineExport((spec.exported as Identifier).name, binding || local);
         }
-        s.remove(node.start, node.end);
+        s.remove(node.start!, node.end!);
       }
     }
 
@@ -127,18 +136,18 @@ function processModule(store, src, filename) {
         // export default function foo() {}
         // export default class A {}
         const { name } = node.declaration.id;
-        s.remove(node.start, node.start + 15);
+        s.remove(node.start!, node.start! + 15);
         s.append(`\n${exportKey}(${moduleKey}, "default", () => ${name})`);
       } else {
         // anonymous default exports
-        s.overwrite(node.start, node.start + 14, `${moduleKey}.default =`);
+        s.overwrite(node.start!, node.start! + 14, `${moduleKey}.default =`);
       }
     }
 
     // export * from './foo'
     if (node.type === 'ExportAllDeclaration') {
       const importId = defineImport(node, node.source.value);
-      s.remove(node.start, node.end);
+      s.remove(node.start!, node.end!);
       s.append(`\nfor (const key in ${importId}) {
         if (key !== 'default') {
           ${exportKey}(${moduleKey}, key, () => ${importId}[key])
@@ -160,10 +169,10 @@ function processModule(store, src, filename) {
         // { foo } -> { foo: __import_x__.foo }
         // skip for destructure patterns
         if (
-          !parent.inPattern ||
+          !(parent as any).inPattern ||
           isInDestructureAssignment(parent, parentStack)
         ) {
-          s.appendLeft(id.end, `: ${binding}`);
+          s.appendLeft(id.end!, `: ${binding}`);
         }
       } else if (
         parent.type === 'ClassDeclaration' &&
@@ -173,24 +182,24 @@ function processModule(store, src, filename) {
           declaredConst.add(id.name);
           // locate the top-most node containing the class declaration
           const topNode = parentStack[1];
-          s.prependRight(topNode.start, `const ${id.name} = ${binding};\n`);
+          s.prependRight(topNode.start!, `const ${id.name} = ${binding};\n`);
         }
       } else {
-        s.overwrite(id.start, id.end, binding);
+        s.overwrite(id.start!, id.end!, binding);
       }
     });
   }
 
   // 4. convert dynamic imports
   walk(ast, {
-    enter(node, parent) {
+    enter(node: Node, parent: Node) {
       if (node.type === 'Import' && parent.type === 'CallExpression') {
         const arg = parent.arguments[0];
         if (arg.type === 'StringLiteral' && arg.value.startsWith('./')) {
-          s.overwrite(node.start, node.start + 6, dynamicImportKey);
+          s.overwrite(node.start!, node.start! + 6, dynamicImportKey);
           s.overwrite(
-            arg.start,
-            arg.end,
+            arg.start!,
+            arg.end!,
             JSON.stringify(arg.value.replace(/^\.\/+/, ''))
           );
         }
@@ -201,7 +210,12 @@ function processModule(store, src, filename) {
   return [s.toString(), importedFiles];
 }
 
-function processFile(store, file, processed, seen) {
+function processFile(
+  store: any,
+  file: FileName,
+  processed: string[],
+  seen: Set<FileName>
+) {
   if (seen.has(file)) {
     return [];
   }
@@ -229,9 +243,9 @@ function processFile(store, file, processed, seen) {
   processed.push(js);
 }
 
-export function vueCompiler(store) {
-  const seen = new Set();
-  const processed = [];
+export function vueCompiler(store: any) {
+  const seen: Set<FileName> = new Set();
+  const processed: string[] = [];
   processFile(store, defaultMainFile, processed, seen);
 
   // also add css files that are not imported
@@ -249,7 +263,7 @@ export function vueCompiler(store) {
   return processed;
 }
 
-export function rawCompiler(store) {
+export function rawCompiler(store: any) {
   let processed = [];
   for (const name in store.files) {
     processed.push(rawProcessor(store.files[name]));
@@ -257,16 +271,16 @@ export function rawCompiler(store) {
   return processed;
 }
 
-function rawProcessor({ fileName, code }) {
-  if (fileName === 'html') {
+function rawProcessor({ filename, code }: File) {
+  if (filename === 'html') {
     return `document.body.innerHTML = ${JSON.stringify(code)}`;
   }
 
-  if (fileName === 'javascript') {
+  if (filename === 'javascript') {
     return code.replaceAll('"', "'");
   }
 
-  if (fileName === 'css') {
+  if (filename === 'css') {
     return `window.__css__ = '${code.replace(/(\r\n|\n|\r)/gm, '')}'`;
   }
   return '';
