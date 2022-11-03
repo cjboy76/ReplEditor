@@ -12,10 +12,15 @@ import {
   compileTemplate,
 } from '@vue/compiler-sfc';
 import type { File } from '../types';
+import { useFileStore } from '../store/useFileStore';
 
 const COMP_IDENTIFIER = `__sfc__`;
+const FILE_STORE = useFileStore();
 
-export const transformSFC = async (store: any, { code, filename }: File) => {
+export const transformSFC = async (
+  store: typeof FILE_STORE,
+  { code, filename }: File
+) => {
   if (!code.trim()) return;
 
   if (filename.endsWith('.js')) {
@@ -90,7 +95,7 @@ export const transformSFC = async (store: any, { code, filename }: File) => {
 };
 
 function doCompileTemplate(
-  store: any,
+  store: typeof FILE_STORE,
   descriptor: SFCDescriptor,
   id: string,
   bindingMetadata: BindingMetadata | undefined,

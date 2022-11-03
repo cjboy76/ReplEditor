@@ -6,12 +6,12 @@ export interface VueModeInjectType {
 }
 
 export type File = {
-  filename: string;
+  filename: FileName;
   code: string;
   compiled: {
-    js: string;
-    css: string;
-    ssr: string;
+    js?: string;
+    css?: string;
+    ssr?: string;
   };
 };
 export type FileName = 'html' | 'css' | 'javascript' | 'JSON' | 'App.vue';

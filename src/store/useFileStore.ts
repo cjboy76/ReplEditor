@@ -20,7 +20,7 @@ const useFileStore = defineStore('FILE_STORE', {
         html: createFile('html', defaultHtml),
         css: createFile('css', defaultCss),
         javascript: createFile('javascript', defaultJavascript),
-      } as Partial<Files>,
+      } as Files,
     };
   },
   getters: {
@@ -57,7 +57,7 @@ const useFileStore = defineStore('FILE_STORE', {
     },
 
     updateCompiledFile(
-      compiled: { js: string; css: string; ssr: string },
+      compiled: { js?: string; css?: string; ssr?: string },
       fileName: FileName
     ) {
       this.files[fileName]!.compiled = compiled;
@@ -94,7 +94,7 @@ function updateActiveFile(curActiveFile: string) {
   activeFile.value = curActiveFile;
 }
 
-function createFile(filename: string, code = ''): File {
+function createFile(filename: FileName, code = ''): File {
   return {
     filename,
     code,
