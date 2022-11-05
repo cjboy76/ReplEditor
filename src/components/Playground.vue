@@ -1,10 +1,11 @@
-<script setup>
-import { Editor, EditorContainer } from '@/components/crafts';
-import { useFileStore, useImportMap } from '@/store/useFileStore';
-import { transformSFC } from '@/output/transform';
-import JsEditor from '@/components/JsEditor.vue';
-import { defaultHtml, defaultCss } from '@/store/globalStatus';
+<script setup lang="ts">
+import { Editor, EditorContainer } from './crafts';
+import { useFileStore, useImportMap } from '../store/useFileStore';
+import { transformSFC } from '../output/SFCcompiler';
+import { defaultHtml, defaultCss } from '../store/globalStatus';
 import { onMounted } from 'vue';
+import type { FileName } from '../types';
+import JsEditor from '@/components/JsEditor.vue';
 
 const FILE_STORE = useFileStore();
 const IMPORT_MAP = useImportMap();
@@ -15,10 +16,10 @@ onMounted(() => {
 
 function compileForVue() {
   FILE_STORE.updateFile(FILE_STORE.getSFC, 'App.vue');
-  transformSFC(FILE_STORE, FILE_STORE.files['App.vue']);
+  transformSFC(FILE_STORE, FILE_STORE.files['App.vue']!);
 }
 
-function changeHandler(value, key) {
+function changeHandler(value: string, key: FileName) {
   if (key === 'JSON') {
     IMPORT_MAP.updateImportMap(value);
   } else {

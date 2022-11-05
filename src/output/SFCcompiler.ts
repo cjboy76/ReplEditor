@@ -1,5 +1,8 @@
+// @ts-ignore
 import hashId from 'hash-sum';
 import {
+  SFCDescriptor,
+  BindingMetadata,
   shouldTransformRef,
   transformRef,
   parse,
@@ -8,28 +11,33 @@ import {
   rewriteDefault,
   compileTemplate,
 } from '@vue/compiler-sfc';
+import type { File } from '../types';
+import type { FileStoreSGA } from '../store/useFileStore';
 
 const COMP_IDENTIFIER = `__sfc__`;
 
-export const transformSFC = async (store, { code, fileName }) => {
+export const transformSFC = async (
+  store: FileStoreSGA,
+  { code, filename }: File
+) => {
   if (!code.trim()) return;
 
-  if (fileName.endsWith('.js')) {
+  if (filename.endsWith('.js')) {
     if (shouldTransformRef(code)) {
-      code = transformRef(code, { fileName }).code;
+      code = transformRef(code, { filename }).code;
     }
-    store.files[fileName].compiled.js = code;
+    store.files[filename].compiled.js = code;
     return;
   }
 
   let clientCode = '';
 
   const { descriptor } = parse(code, {
-    filename: fileName,
+    filename: filename,
     sourceMap: true,
   });
 
-  const id = hashId(fileName);
+  const id = hashId(filename);
   const hasScoped = descriptor.styles.some((s) => s.scoped);
 
   const compiledScriptResult = await doCompileScript(descriptor, id);
@@ -45,7 +53,7 @@ export const transformSFC = async (store, { code, fileName }) => {
       store,
       descriptor,
       id,
-      bindings,
+      bindings as BindingMetadata | undefined,
       false
     );
 
@@ -66,28 +74,34 @@ export const transformSFC = async (store, { code, fileName }) => {
   for (const style of descriptor.styles) {
     const styleResult = compileStyle({
       source: style.content,
-      filename: fileName,
+      filename: filename,
       id,
       scoped: style.scoped,
-      modules: !!style.module,
+      // modules: !!style.module,
     });
     css += styleResult.code + '\n';
   }
   if (clientCode) {
     clientCode +=
-      `\n${COMP_IDENTIFIER}.__file = ${JSON.stringify(fileName)}` +
+      `\n${COMP_IDENTIFIER}.__file = ${JSON.stringify(filename)}` +
       `\nexport default ${COMP_IDENTIFIER}`;
   }
 
   store.updateCompiledFile(
     { js: clientCode.trimStart(), css: css.trim() },
-    fileName
+    filename
   );
 };
 
-function doCompileTemplate(store, descriptor, id, bindingMetadata, ssr) {
+function doCompileTemplate(
+  store: FileStoreSGA,
+  descriptor: SFCDescriptor,
+  id: string,
+  bindingMetadata: BindingMetadata | undefined,
+  ssr: boolean
+) {
   const templateResult = compileTemplate({
-    source: descriptor.template.content,
+    source: descriptor.template!.content,
     filename: descriptor.filename,
     id,
     scoped: descriptor.styles.some((s) => s.scoped),
@@ -114,7 +128,7 @@ function doCompileTemplate(store, descriptor, id, bindingMetadata, ssr) {
   return code;
 }
 
-async function doCompileScript(descriptor, id) {
+async function doCompileScript(descriptor: SFCDescriptor, id: string) {
   if (!descriptor.script && !descriptor.scriptSetup) {
     return [`\nconst ${COMP_IDENTIFIER} = {}`, undefined];
   }

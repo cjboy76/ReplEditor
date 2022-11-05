@@ -1,6 +1,5 @@
 import { ref } from 'vue';
-
-const vueMode = ref(false);
+import type { Ref } from 'vue';
 
 const defaultHtml = `<div id="app">
   <div>
@@ -21,8 +20,9 @@ const defaultJavascript = `import { ref } from "vue"
 
 const title = ref("ReplEditor")
                           `;
+const vueMode: Ref<boolean> = ref(false);
 
-function setVueMode(value) {
+function setVueMode(value: boolean) {
   vueMode.value = value;
 }
 
