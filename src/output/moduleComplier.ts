@@ -7,7 +7,7 @@ import {
   isInDestructureAssignment,
   isStaticProperty,
 } from '@vue/compiler-sfc';
-import { defaultMainFile } from '../store/useFileStore';
+import { defaultMainFile, type FileStoreSGA } from '../store/useFileStore';
 import type { File, FileName } from '../types';
 import { ExportSpecifier, Identifier, Node } from '@babel/types';
 
@@ -17,7 +17,7 @@ const dynamicImportKey = `__dynamic_import__`;
 const moduleKey = `__module__`;
 
 function processModule(
-  store: any,
+  store: FileStoreSGA,
   src: string,
   filename: FileName
 ): [string, Set<FileName>] {
@@ -34,7 +34,7 @@ function processModule(
 
   function defineImport(node: Node, source: string) {
     const filename = source.replace(/^\.\/+/, '') as FileName;
-    if (!(filename in store.$state.files)) {
+    if (!(filename in store.files)) {
       throw new Error(`File "${filename}" does not exist.`);
     }
     if (importedFiles.has(filename)) {
@@ -211,7 +211,7 @@ function processModule(
 }
 
 function processFile(
-  store: any,
+  store: FileStoreSGA,
   file: FileName,
   processed: string[],
   seen: Set<FileName>
@@ -223,7 +223,7 @@ function processFile(
 
   let [js, importedFiles] = processModule(
     store,
-    store.files[file].compiled.js,
+    store.files[file].compiled.js!,
     file
   );
 
@@ -243,16 +243,17 @@ function processFile(
   processed.push(js);
 }
 
-export function vueCompiler(store: any) {
+export function vueCompiler(store: FileStoreSGA) {
   const seen: Set<FileName> = new Set();
   const processed: string[] = [];
   processFile(store, defaultMainFile, processed, seen);
 
   // also add css files that are not imported
-  for (const filename in store.files) {
+  let filename: keyof typeof store.files;
+  for (filename in store.files) {
     if (filename.endsWith('.css')) {
       const file = store.files[filename];
-      if (!seen.has(file)) {
+      if (!seen.has(filename)) {
         processed.push(
           `\nwindow.__css__ += ${JSON.stringify(file.compiled.css)}`
         );
@@ -263,9 +264,10 @@ export function vueCompiler(store: any) {
   return processed;
 }
 
-export function rawCompiler(store: any) {
+export function rawCompiler(store: FileStoreSGA) {
   let processed = [];
-  for (const name in store.files) {
+  let name: keyof typeof store.files;
+  for (name in store.files) {
     processed.push(rawProcessor(store.files[name]));
   }
   return processed;

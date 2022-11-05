@@ -65,6 +65,11 @@ const useFileStore = defineStore('FILE_STORE', {
   },
 });
 
+type UseNullStore = ReturnType<typeof defineStore>;
+type NullStore = ReturnType<UseNullStore>;
+type FileStore = ReturnType<typeof useFileStore>;
+export type FileStoreSGA = Omit<FileStore, keyof NullStore>;
+
 const useImportMap = defineStore('IMPORT_MAP', {
   state: () => {
     return {

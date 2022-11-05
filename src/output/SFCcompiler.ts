@@ -12,13 +12,12 @@ import {
   compileTemplate,
 } from '@vue/compiler-sfc';
 import type { File } from '../types';
-import { useFileStore } from '../store/useFileStore';
+import type { FileStoreSGA } from '../store/useFileStore';
 
 const COMP_IDENTIFIER = `__sfc__`;
-const FILE_STORE = useFileStore();
 
 export const transformSFC = async (
-  store: typeof FILE_STORE,
+  store: FileStoreSGA,
   { code, filename }: File
 ) => {
   if (!code.trim()) return;
@@ -95,7 +94,7 @@ export const transformSFC = async (
 };
 
 function doCompileTemplate(
-  store: typeof FILE_STORE,
+  store: FileStoreSGA,
   descriptor: SFCDescriptor,
   id: string,
   bindingMetadata: BindingMetadata | undefined,
