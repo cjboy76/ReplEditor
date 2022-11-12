@@ -20,6 +20,7 @@ const useFileStore = defineStore('FILE_STORE', {
         html: createFile('html', defaultHtml),
         css: createFile('css', defaultCss),
         javascript: createFile('javascript', defaultJavascript),
+        'App.vue': createFile('App.vue'),
       } as Files,
     };
   },
