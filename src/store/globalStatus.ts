@@ -26,4 +26,9 @@ function setVueMode(value: boolean) {
   vueMode.value = value;
 }
 
-export { vueMode, setVueMode, defaultHtml, defaultCss, defaultJavascript };
+const VueModeInjectProvide = {
+  vueMode,
+  setVueMode,
+};
+
+export { defaultHtml, defaultCss, defaultJavascript, VueModeInjectProvide };

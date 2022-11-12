@@ -1,10 +1,5 @@
 import type { Ref } from 'vue';
 
-export interface VueModeInjectType {
-  vueMode: Ref<boolean>;
-  setVueMode: (value: boolean) => void;
-}
-
 export type File = {
   filename: FileName;
   code: string;

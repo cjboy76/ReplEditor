@@ -21,10 +21,10 @@ import srcdoc from '../output/playground.html?raw';
 import { vueCompiler, rawCompiler } from '../output/moduleComplier';
 import { Hako } from 'vue-hako';
 import viewSizeOptions from '../data/screen-size.json';
-import type { VueModeInjectType } from '../types';
+import { VueModeInjectProvide } from '../store/globalStatus';
 import type { WatchStopHandle } from 'vue';
 
-const { vueMode } = inject('vueMode') as VueModeInjectType;
+const { vueMode } = inject('vueMode', VueModeInjectProvide);
 const preview = ref();
 const FILE_STORE = useFileStore();
 const IMPORT_MAP = useImportMap();
