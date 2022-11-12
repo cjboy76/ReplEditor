@@ -16,7 +16,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui"
   },
   "dependencies": {
     "@types/splitpanes": "^2.2.1",
@@ -36,8 +37,9 @@
     "@types/node": "^18.11.7",
     "@vitejs/plugin-vue": "^3.1.2",
     "@vitest/coverage-c8": "^0.25.1",
+    "@vitest/ui": "^0.25.1",
     "@vue/test-utils": "^2.2.1",
-    "jsdom": "^20.0.2",
+    "happy-dom": "^7.7.0",
     "sass": "^1.52.1",
     "sass-loader": "^13.0.0",
     "typescript": "^4.8.4",

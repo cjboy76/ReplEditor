@@ -83,9 +83,10 @@ export default defineConfig({
     },
   },
   test: {
-    environment: 'jsdom',
+    environment: 'happy-dom',
     css: false,
     include: ['src/**/__tests__/*'],
+    setupFiles: 'src/testSetup.ts',
     clearMocks: true,
     alias: [
       {
