@@ -83,7 +83,8 @@ export default defineConfig({
     },
   },
   test: {
-    environment: 'happy-dom',
+    threads: false,
+    environment: 'jsdom',
     css: false,
     include: ['src/**/__tests__/*'],
     setupFiles: 'src/testSetup.ts',

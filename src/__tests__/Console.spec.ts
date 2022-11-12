@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils';
 import { Console } from '../components/crafts';
 
 describe('Console.vue', () => {
-  it('props value displayed correctly', () => {
+  it('Console Props Testing', () => {
     const wrapper = mount(Console, {
       props: { error: Error("'aaa' is not defined.") },
     });
