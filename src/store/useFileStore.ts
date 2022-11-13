@@ -20,6 +20,7 @@ const useFileStore = defineStore('FILE_STORE', {
         html: createFile('html', defaultHtml),
         css: createFile('css', defaultCss),
         javascript: createFile('javascript', defaultJavascript),
+        'App.vue': createFile('App.vue'),
       } as Files,
     };
   },
@@ -56,10 +57,7 @@ const useFileStore = defineStore('FILE_STORE', {
       delete this.files[fileName];
     },
 
-    updateCompiledFile(
-      compiled: { js?: string; css?: string; ssr?: string },
-      fileName: FileName
-    ) {
+    updateCompiledFile(compiled: File['compiled'], fileName: FileName) {
       this.files[fileName]!.compiled = compiled;
     },
   },

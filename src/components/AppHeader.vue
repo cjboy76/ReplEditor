@@ -6,9 +6,9 @@ import { Switch } from './crafts';
 import { repository } from '../../package.json';
 import { editor } from 'monaco-editor';
 import { inject, ref } from 'vue';
-import type { VueModeInjectType } from '../types';
+import { VueModeInjectProvide } from '../store/globalStatus';
 
-const { setVueMode } = inject('vueMode') as VueModeInjectType;
+const { setVueMode } = inject('vueMode', VueModeInjectProvide);
 const isDarkMode = ref(false);
 
 function toggleTheme(value: boolean) {
