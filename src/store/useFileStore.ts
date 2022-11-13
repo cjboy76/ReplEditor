@@ -57,10 +57,7 @@ const useFileStore = defineStore('FILE_STORE', {
       delete this.files[fileName];
     },
 
-    updateCompiledFile(
-      compiled: { js?: string; css?: string; ssr?: string },
-      fileName: FileName
-    ) {
+    updateCompiledFile(compiled: File['compiled'], fileName: FileName) {
       this.files[fileName]!.compiled = compiled;
     },
   },
