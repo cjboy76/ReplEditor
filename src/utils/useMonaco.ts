@@ -6,7 +6,7 @@ import type { editor as Editor } from 'monaco-editor';
 function useMonaco(
   element: HTMLElement,
   language: string,
-  args: Editor.IStandaloneEditorConstructionOptions
+  args?: Editor.IStandaloneEditorConstructionOptions
 ) {
   // @ts-ignore
   editor.defineTheme('vitesse-dark', darktheme);

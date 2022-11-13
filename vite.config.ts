@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
@@ -79,5 +81,20 @@ export default defineConfig({
         },
       },
     },
+  },
+  test: {
+    threads: false,
+    environment: 'jsdom',
+    css: false,
+    include: ['src/**/__tests__/*'],
+    setupFiles: 'src/testSetup.ts',
+    clearMocks: true,
+    alias: [
+      {
+        find: /^monaco-editor$/,
+        replacement:
+          __dirname + '/node_modules/monaco-editor/esm/vs/editor/editor.api',
+      },
+    ],
   },
 });
