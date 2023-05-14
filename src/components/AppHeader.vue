@@ -36,7 +36,11 @@ function toggleTheme(value: boolean) {
         <span v-show="isDarkMode"> ReplEditor </span>
       </h1>
       <div class="options">
-        <Switch text="Vue" color="yellow" @on-change="setVueMode" />
+        <Switch
+          text="Vue"
+          :color="isDarkMode ? 'yellow' : 'darkcyan'"
+          @on-change="setVueMode"
+        />
 
         <button
           class="toggleTheme"
