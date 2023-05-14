@@ -1,4 +1,7 @@
+@import './cyberpunk.css';
+
 :root {
+  --font-family-default: Avenir, Helvetica, Arial, sans-serif;
   --bg-default: rgb(255, 255, 255);
   --bg-secondary: rgb(236, 234, 234);
   --text-default: rgb(80, 80, 78);
@@ -8,10 +11,11 @@
 }
 
 [data-theme="dark"] {
+  --font-family-default: BlenderProBook;
   --bg-default: rgb(0, 0, 0);
   --bg-secondary: rgb(35, 35, 35);
-  --text-default: darkcyan;
-  --text-highlight: rgb(255, 187, 69);
+  --text-default: cyan;
+  --text-highlight: cyan;
   --text-dark: rgb(100, 100, 100);
   --border-default: #444;
 }

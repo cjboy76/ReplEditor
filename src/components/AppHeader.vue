@@ -1,24 +1,25 @@
 <script setup lang="ts">
-import Fa6SolidMoon from '~icons/fa6-solid/moon';
-import Fa6SolidSun from '~icons/fa6-solid/sun';
-import MdiGithub from '~icons/mdi/github';
-import { Switch } from './crafts';
-import { repository } from '../../package.json';
-import { editor } from 'monaco-editor';
-import { inject, ref } from 'vue';
-import { VueModeInjectProvide } from '../store/globalStatus';
+import Fa6SolidMoon from "~icons/fa6-solid/moon";
+import PhSunDuotone from "~icons/ph/sun-duotone";
+import BytesizeLightning from "~icons/bytesize/lightning";
+import MdiGithub from "~icons/mdi/github";
+import { Switch } from "./crafts";
+import { repository } from "../../package.json";
+import { editor } from "monaco-editor";
+import { inject, ref } from "vue";
+import { VueModeInjectProvide } from "../store/globalStatus";
 
-const { setVueMode } = inject('vueMode', VueModeInjectProvide);
+const { setVueMode } = inject("vueMode", VueModeInjectProvide);
 const isDarkMode = ref(false);
 
 function toggleTheme(value: boolean) {
   isDarkMode.value = value;
   if (value) {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    editor.setTheme('vitesse-dark');
+    document.documentElement.setAttribute("data-theme", "dark");
+    editor.setTheme("vitesse-dark");
   } else {
-    document.documentElement.setAttribute('data-theme', 'light');
-    editor.setTheme('vitesse-light');
+    document.documentElement.setAttribute("data-theme", "light");
+    editor.setTheme("vitesse-light");
   }
 }
 </script>
@@ -26,20 +27,27 @@ function toggleTheme(value: boolean) {
 <template>
   <header>
     <div class="header">
-      <h1 class="headerText">ReplEditor</h1>
+      <h1
+        class="headerText"
+        :class="{ 'cyberpunk-font text-glitch': isDarkMode }"
+      >
+        ReplEditor
+        <span v-show="isDarkMode"> ReplEditor </span>
+        <span v-show="isDarkMode"> ReplEditor </span>
+      </h1>
       <div class="options">
-        <Switch text="Vue" color="#00897B" @on-change="setVueMode" />
+        <Switch text="Vue" color="yellow" @on-change="setVueMode" />
 
         <button
           class="toggleTheme"
           :class="{ spin_right: isDarkMode, spin_left: !isDarkMode }"
         >
-          <Fa6SolidSun
+          <PhSunDuotone
             v-show="!isDarkMode"
             class="icon"
             @click="toggleTheme(true)"
           />
-          <Fa6SolidMoon
+          <BytesizeLightning
             v-show="isDarkMode"
             class="icon"
             @click="toggleTheme(false)"

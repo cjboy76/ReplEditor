@@ -7,24 +7,24 @@ import {
   computed,
   inject,
   watch,
-} from 'vue';
-import MaterialSymbolsDesktopWindowsOutline from '~icons/material-symbols/desktop-windows-outline';
-import MaterialSymbolsKeyboardArrowDown from '~icons/material-symbols/keyboard-arrow-down';
-import IcBaselineCheck from '~icons/ic/baseline-check';
-import { Console, EditorContainer } from './crafts';
+} from "vue";
+import MaterialSymbolsDesktopWindowsOutline from "~icons/material-symbols/desktop-windows-outline";
+import MaterialSymbolsKeyboardArrowDown from "~icons/material-symbols/keyboard-arrow-down";
+import IcBaselineCheck from "~icons/ic/baseline-check";
+import { Console, EditorContainer } from "./crafts";
 import {
   useFileStore,
   defaultMainFile,
   useImportMap,
-} from '../store/useFileStore';
-import srcdoc from '../output/playground.html?raw';
-import { vueCompiler, rawCompiler } from '../output/moduleComplier';
-import { Hako } from 'vue-hako';
-import viewSizeOptions from '../data/screen-size.json';
-import { VueModeInjectProvide } from '../store/globalStatus';
-import type { WatchStopHandle } from 'vue';
+} from "../store/useFileStore";
+import srcdoc from "../output/playground.html?raw";
+import { vueCompiler, rawCompiler } from "../output/moduleComplier";
+import { Hako } from "vue-hako";
+import viewSizeOptions from "../data/screen-size.json";
+import { VueModeInjectProvide } from "../store/globalStatus";
+import type { WatchStopHandle } from "vue";
 
-const { vueMode } = inject('vueMode', VueModeInjectProvide);
+const { vueMode } = inject("vueMode", VueModeInjectProvide);
 const preview = ref();
 const FILE_STORE = useFileStore();
 const IMPORT_MAP = useImportMap();
@@ -41,15 +41,15 @@ watch(vueMode, () => {
 
 onMounted(() => {
   createSandBox();
-  window.addEventListener('message', handleSandboxEvent);
+  window.addEventListener("message", handleSandboxEvent);
 });
 
 onUnmounted(() => {
-  sandBox.removeEventListener('load', () => {
+  sandBox.removeEventListener("load", () => {
     watchEffect(updateVueView);
   });
   stopWatcher && stopWatcher();
-  window.removeEventListener('message', handleSandboxEvent);
+  window.removeEventListener("message", handleSandboxEvent);
 });
 
 function createSandBox() {
@@ -58,18 +58,18 @@ function createSandBox() {
     preview.value.removeChild(sandBox);
   }
 
-  sandBox = document.createElement('iframe');
+  sandBox = document.createElement("iframe");
   sandBox.setAttribute(
-    'sandbox',
+    "sandbox",
     [
-      'allow-forms',
-      'allow-modals',
-      'allow-pointer-lock',
-      'allow-popups',
-      'allow-same-origin',
-      'allow-scripts',
-      'allow-top-navigation-by-user-activation',
-    ].join(' ')
+      "allow-forms",
+      "allow-modals",
+      "allow-pointer-lock",
+      "allow-popups",
+      "allow-same-origin",
+      "allow-scripts",
+      "allow-top-navigation-by-user-activation",
+    ].join(" ")
   );
   const sandBoxSrc = srcdoc.replace(
     /<!--IMPORT_MAP-->/,
@@ -77,7 +77,7 @@ function createSandBox() {
   );
   sandBox.srcdoc = sandBoxSrc;
   preview.value.appendChild(sandBox);
-  sandBox.addEventListener('load', () => {
+  sandBox.addEventListener("load", () => {
     if (vueMode.value) {
       stopWatcher = watchEffect(updateVueView);
     } else {
@@ -114,10 +114,10 @@ function updateVueView() {
 
   sandBox.contentWindow.postMessage(
     {
-      action: 'eval',
+      action: "eval",
       code: codeToEval,
     },
-    '*'
+    "*"
   );
 }
 
@@ -135,25 +135,25 @@ function updateRawView() {
 
   sandBox.contentWindow.postMessage(
     {
-      action: 'eval',
+      action: "eval",
       code: codeToEval,
     },
-    '*'
+    "*"
   );
 }
 
 function handleSandboxEvent({ data }: MessageEvent) {
   const { action, value } = data;
-  if (action === 'error') {
+  if (action === "error") {
     runtimeError.value = value;
   }
 }
 type ViewSizeKeys = keyof typeof viewSizeOptions;
-const isDefaultSize = computed(() => currentViewSize.value === 'Default');
+const isDefaultSize = computed(() => currentViewSize.value === "Default");
 const width = computed(() => viewSizeOptions[currentViewSize.value][0]);
 const height = computed(() => viewSizeOptions[currentViewSize.value][1]);
 const toggleViewMenu = ref(false);
-const currentViewSize = ref<ViewSizeKeys>('Default');
+const currentViewSize = ref<ViewSizeKeys>("Default");
 function toggleMenu() {
   toggleViewMenu.value = !toggleViewMenu.value;
 }
@@ -186,7 +186,7 @@ function setViewSize(value: ViewSizeKeys) {
       </button>
     </div>
     <splitpanes class="default-theme" horizontal style="height: 100vh">
-      <pane :class="{ 'py-10px': !isDefaultSize }">
+      <pane :class="{ 'py-10px': !isDefaultSize }" size="80">
         <Hako
           style="height: 100%"
           :width="width"
@@ -196,7 +196,7 @@ function setViewSize(value: ViewSizeKeys) {
           <div class="preview" ref="preview"></div>
         </Hako>
       </pane>
-      <pane>
+      <pane size="20">
         <editor-container lang="Console">
           <Console :error="runtimeError" />
         </editor-container>
