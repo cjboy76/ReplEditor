@@ -8,6 +8,7 @@ import {
   inject,
   watch,
 } from "vue";
+import { Splitpanes, Pane } from "splitpanes";
 import MaterialSymbolsDesktopWindowsOutline from "~icons/material-symbols/desktop-windows-outline";
 import MaterialSymbolsKeyboardArrowDown from "~icons/material-symbols/keyboard-arrow-down";
 import IcBaselineCheck from "~icons/ic/baseline-check";

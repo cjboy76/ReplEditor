@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import Playground from '@/components/Playground.vue';
-import Preview from '@/components/Preview.vue';
-import AppHeader from '@/components/AppHeader.vue';
+import { Splitpanes, Pane } from "splitpanes";
+import Playground from "@/components/Playground.vue";
+import Preview from "@/components/Preview.vue";
+import AppHeader from "@/components/AppHeader.vue";
 </script>
 
 <template>
