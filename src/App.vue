@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import Repl from '@/components/Repl.vue';
+import { useHeader } from "./utils/useHeader";
+import Repl from "@/components/Repl.vue";
+
+useHeader();
 </script>
 
 <template>
