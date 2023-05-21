@@ -1,5 +1,7 @@
+// https://github.com/vuejs/repl/blob/main/src/transform.ts
+
 // @ts-ignore
-import hashId from 'hash-sum';
+import hashId from "hash-sum";
 import {
   SFCDescriptor,
   BindingMetadata,
@@ -10,9 +12,9 @@ import {
   compileScript,
   rewriteDefault,
   compileTemplate,
-} from '@vue/compiler-sfc';
-import type { File } from '../types';
-import type { FileStoreSGA } from '../store/useFileStore';
+} from "@vue/compiler-sfc";
+import type { File } from "../types";
+import type { FileStoreSGA } from "../store/useFileStore";
 
 const COMP_IDENTIFIER = `__sfc__`;
 
@@ -22,7 +24,7 @@ export const transformSFC = async (
 ) => {
   if (!code.trim()) return;
 
-  if (filename.endsWith('.js')) {
+  if (filename.endsWith(".js")) {
     if (shouldTransformRef(code)) {
       code = transformRef(code, { filename }).code;
     }
@@ -30,7 +32,7 @@ export const transformSFC = async (
     return;
   }
 
-  let clientCode = '';
+  let clientCode = "";
 
   const { descriptor } = parse(code, {
     filename: filename,
@@ -70,7 +72,7 @@ export const transformSFC = async (
   }
 
   // style
-  let css = '';
+  let css = "";
   for (const style of descriptor.styles) {
     const styleResult = compileStyle({
       source: style.content,
@@ -79,7 +81,7 @@ export const transformSFC = async (
       scoped: style.scoped,
       // modules: !!style.module,
     });
-    css += styleResult.code + '\n';
+    css += styleResult.code + "\n";
   }
   if (clientCode) {
     clientCode +=
@@ -141,7 +143,7 @@ async function doCompileScript(descriptor: SFCDescriptor, id: string) {
       },
     });
 
-    let outputCode = '';
+    let outputCode = "";
     outputCode +=
       `\n` + rewriteDefault(compiledScript.content, COMP_IDENTIFIER);
 
